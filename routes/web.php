@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MeetingAttendeeController;
 use App\Http\Controllers\MeetingController;
+use App\Http\Controllers\MeetingMinuteController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
@@ -18,6 +19,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('meetings/{meeting}/status', [MeetingController::class, 'updateStatus'])->name('meetings.update-status');
     Route::delete('meetings/{meeting}', [MeetingController::class, 'destroy'])->name('meetings.destroy');
     Route::patch('meetings/{meeting}/attendees/{attendee}', [MeetingAttendeeController::class, 'update'])->name('meetings.attendees.update');
+
+    Route::get('minutes', [MeetingMinuteController::class, 'index'])->name('minutes.index');
+    Route::post('meetings/{meeting}/minutes', [MeetingMinuteController::class, 'storeOrUpdate'])->name('meetings.minutes.store');
+    Route::patch('minutes/{minute}/approve', [MeetingMinuteController::class, 'approve'])->name('minutes.approve');
+    Route::get('minutes/{minute}/export-pdf', [MeetingMinuteController::class, 'exportPdf'])->name('minutes.export-pdf');
 });
 
 require __DIR__.'/settings.php';
