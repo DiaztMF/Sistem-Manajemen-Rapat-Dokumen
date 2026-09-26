@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Laravel\Fortify\Contracts\PasskeyUser;
@@ -27,7 +28,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'role', 'position', 'department', 'phone', 'is_active'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
@@ -45,6 +46,37 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
+            'is_active' => 'boolean',
         ];
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isSekretaris(): bool
+    {
+        return in_array($this->role, ['admin', 'sekretaris'], true);
+    }
+
+    public function isPimpinan(): bool
+    {
+        return in_array($this->role, ['admin', 'pimpinan'], true);
+    }
+
+    public function meetingsCreated(): HasMany
+    {
+        return $this->hasMany(Meeting::class, 'created_by');
+    }
+
+    public function meetingAttendances(): HasMany
+    {
+        return $this->hasMany(MeetingAttendee::class, 'user_id');
+    }
+
+    public function assignedActionItems(): HasMany
+    {
+        return $this->hasMany(ActionItem::class, 'pic_id');
     }
 }
