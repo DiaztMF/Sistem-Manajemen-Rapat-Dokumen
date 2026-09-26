@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ActionItemController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\MeetingAttendeeController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\MeetingMinuteController;
@@ -24,6 +26,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('meetings/{meeting}/minutes', [MeetingMinuteController::class, 'storeOrUpdate'])->name('meetings.minutes.store');
     Route::patch('minutes/{minute}/approve', [MeetingMinuteController::class, 'approve'])->name('minutes.approve');
     Route::get('minutes/{minute}/export-pdf', [MeetingMinuteController::class, 'exportPdf'])->name('minutes.export-pdf');
+
+    Route::get('action-items', [ActionItemController::class, 'index'])->name('action-items.index');
+    Route::post('meetings/{meeting}/action-items', [ActionItemController::class, 'store'])->name('meetings.action-items.store');
+    Route::patch('action-items/{actionItem}', [ActionItemController::class, 'update'])->name('action-items.update');
+    Route::delete('action-items/{actionItem}', [ActionItemController::class, 'destroy'])->name('action-items.destroy');
+
+    Route::get('documents', [DocumentController::class, 'index'])->name('documents.index');
+    Route::post('documents', [DocumentController::class, 'store'])->name('documents.store');
+    Route::get('documents/{document}/download', [DocumentController::class, 'download'])->name('documents.download');
+    Route::delete('documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
 });
 
 require __DIR__.'/settings.php';
