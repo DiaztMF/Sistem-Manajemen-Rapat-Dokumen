@@ -12,8 +12,7 @@ cd /var/www/html
 export PORT
 
 echo "===> [1/7] Mengonfigurasi Nginx port dinamis: ${PORT}..."
-# Hanya variabel ${PORT} yang disubstitusi, variabel internal Nginx ($uri, $fastcgi_script_name) tetap utuh
-envsubst '${PORT}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
+sed "s/\${PORT}/${PORT}/g" /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
 nginx -t
 
 echo "===> [2/7] Memperbaiki permission storage dan cache ke www-data..."

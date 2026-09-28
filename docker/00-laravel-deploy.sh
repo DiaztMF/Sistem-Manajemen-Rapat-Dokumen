@@ -9,10 +9,8 @@ cd /var/www/html
 : "${PORT:=80}"
 export PORT
 
-# 1. Render nginx.conf dari template (hanya ${PORT} yang disubstitusi,
-#    variabel nginx lain seperti $uri / $query_string dibiarkan utuh).
-envsubst '${PORT}' < /etc/nginx/nginx.conf.template > /tmp/nginx.conf
-nginx -t -c /tmp/nginx.conf
+sed "s/\${PORT}/${PORT}/g" /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
+nginx -t
 
 # 2. Tunggu PostgreSQL siap (maks ~60 detik). php artisan db:show
 #    membaca koneksi dari DB_URL maupun DB_HOST/DB_* — tanpa password inline.
