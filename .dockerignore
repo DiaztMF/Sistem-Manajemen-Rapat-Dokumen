@@ -1,0 +1,48 @@
+# Version control
+.git/
+.github/
+
+# Local dependencies & caches
+node_modules/
+vendor/
+.phpunit.cache/
+.phpunit.result.cache
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*.key
+
+# Local SQLite databases (saat production menggunakan PostgreSQL)
+database/*.sqlite*
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.fleet/
+.zed/
+
+# Agent & prompt scratchpads
+.agents/
+.claude/
+.cursor/
+.factory/
+.grok/
+.junie/
+.kiro/
+.pi/
+.playwright-mcp/
+
+# Testing & logs
+tests/
+storage/logs/*
+!storage/logs/.gitignore
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# Documentation markdown (opsional untuk container)
+docs/
