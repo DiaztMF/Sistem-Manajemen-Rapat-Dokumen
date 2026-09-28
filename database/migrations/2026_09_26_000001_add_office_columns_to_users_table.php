@@ -8,12 +8,13 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // NOTE: no ->after() — PostgreSQL does not support column positioning.
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->default('peserta')->after('password'); // admin, sekretaris, pimpinan, peserta
-            $table->string('position')->nullable()->after('role'); // e.g. "Kepala Divisi TI"
-            $table->string('department')->nullable()->after('position'); // e.g. "Teknologi Informasi"
-            $table->string('phone')->nullable()->after('department');
-            $table->boolean('is_active')->default(true)->after('phone');
+            $table->string('role')->default('peserta'); // admin, sekretaris, pimpinan, peserta
+            $table->string('position')->nullable(); // e.g. "Kepala Divisi TI"
+            $table->string('department')->nullable(); // e.g. "Teknologi Informasi"
+            $table->string('phone')->nullable();
+            $table->boolean('is_active')->default(true);
         });
     }
 
