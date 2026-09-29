@@ -23,7 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             HandleAppearance::class,
             HandleInertiaRequests::class,
-            AddLinkHeadersForPreloadedAssets::class,
+            // AddLinkHeadersForPreloadedAssets dinonaktifkan: menghasilkan header HTTP Link puluhan KB (melebihi limit fastcgi buffer Nginx)
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
