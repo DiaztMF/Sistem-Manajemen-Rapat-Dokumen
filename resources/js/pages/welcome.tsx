@@ -12,6 +12,7 @@ import {
     Download
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -25,7 +26,7 @@ export default function Welcome() {
             icon: CalendarCheck2,
             title: 'Penjadwalan & Presensi',
             description:
-                'Susun agenda pembahasan secara terstruktur, undang peserta lintas departemen, dan catat presensi kehadiran secara waktu nyata.',
+                'Susun agenda pembahasan secara terstruktur, undang peserta lintas departemen, kelola perubahan jadwal, dan catat presensi kehadiran beserta riwayatnya secara waktu nyata.',
             badge: 'Manajemen Rapat',
             badgeColor: 'bg-blue-500/10 text-blue-600 dark:text-blue-400',
         },
@@ -73,6 +74,7 @@ export default function Welcome() {
                             <AppLogo />
                         </Link>
                         <nav className="flex items-center gap-3">
+                            <ThemeToggle className="size-9" />
                             {auth.user ? (
                                 <Button asChild className="gap-2 shadow-xs">
                                     <Link href={dashboard()}>
@@ -153,7 +155,7 @@ export default function Welcome() {
                                             </div>
                                             <CardTitle className="text-lg leading-snug">{pillar.title}</CardTitle>
                                         </CardHeader>
-                                        <CardContent>
+                                        <CardContent className="flex-1">
                                             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                                                 {pillar.description}
                                             </p>
