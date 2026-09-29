@@ -1,8 +1,9 @@
 # ==============================================================================
 # Production Dockerfile untuk Laravel 13 + Inertia React (Render Web Service)
-# Strategi: Single-stage PHP 8.3 FPM Alpine dengan pre-built frontend (lokal)
+# Strategi: Single-stage PHP 8.4 FPM Alpine dengan pre-built frontend (lokal)
+# Laravel 13 / Symfony 8.x menggunakan PHP 8.4 Property Hooks (syntax error di PHP 8.3)
 # ==============================================================================
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 # Set non-interactive & memory limits untuk composer
 ENV COMPOSER_ALLOW_SUPERUSER=1 \
