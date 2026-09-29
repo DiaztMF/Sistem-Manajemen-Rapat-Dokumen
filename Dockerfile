@@ -52,6 +52,7 @@ COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
 # Opcache & PHP settings
 COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 COPY docker/php/uploads.ini /usr/local/etc/php/conf.d/uploads.ini
+COPY docker/php/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 
 WORKDIR /var/www/html
 

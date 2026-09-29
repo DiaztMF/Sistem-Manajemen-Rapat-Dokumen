@@ -22,6 +22,7 @@ chmod -R 775 storage bootstrap/cache 2>/dev/null || true
 
 echo "===> [3/7] Membuat storage symbolic link..."
 php artisan storage:link --force || true
+chown -h www-data:www-data public/storage 2>/dev/null || true
 
 echo "===> [4/7] Menjalankan package discovery..."
 php artisan package:discover --ansi

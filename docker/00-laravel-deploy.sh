@@ -28,8 +28,9 @@ if [ "${DB_CONNECTION:-}" = "pgsql" ]; then
   done
 fi
 
-# 3. Regenerasi discovery + cache (aman walau APP_KEY/env berubah antar deploy).
-php artisan package:discover --ansi
+echo "===> [3/7] Membuat storage symbolic link..."
+php artisan storage:link --force || true
+chown -h www-data:www-data public/storage 2>/dev/null || true
 php artisan config:clear
 php artisan route:clear
 php artisan view:clear
