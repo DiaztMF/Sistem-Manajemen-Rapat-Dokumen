@@ -1,6 +1,6 @@
 import { Form, Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
-import { ArrowLeft, KeyRound, LogIn, ShieldAlert, Sparkles, UserCheck } from 'lucide-react';
+import { ArrowLeft, LogIn, ShieldAlert, Sparkles, UserCheck } from 'lucide-react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
@@ -12,7 +12,6 @@ import { Spinner } from '@/components/ui/spinner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
-import PasskeyVerify from '@/components/passkey-verify';
 import AppLogo from '@/components/app-logo';
 
 type Props = {
@@ -91,8 +90,6 @@ export default function Login({ status, canResetPassword }: Props) {
                                 ))}
                             </div>
                         </div>
-
-                        <PasskeyVerify />
 
                         <Form
                             {...store.form()}
