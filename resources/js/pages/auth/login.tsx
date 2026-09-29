@@ -184,7 +184,7 @@ export default function Login({ status, canResetPassword }: Props) {
 
                         {/* Internal notice */}
                         <div className="mt-5 pt-4 border-t border-border/60 text-center">
-                            <p className="text-[11px] text-muted-foreground">
+                            <p className="text-[11px] text-muted-foreground text-balance">
                                 Belum memiliki akun atau lupa akses? Hubungi <span className="font-semibold text-foreground">Administrator Sistem</span> di Divisi TI.
                             </p>
                         </div>
