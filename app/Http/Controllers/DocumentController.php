@@ -15,7 +15,16 @@ class DocumentController extends Controller
     {
         Gate::authorize('viewAny', Document::class);
 
+        $user = $request->user();
         $query = Document::query()->with(['uploader:id,name', 'meeting:id,title']);
+
+        if (! $user->isAdmin() && ! $user->isSekretaris() && ! $user->isPimpinan()) {
+            $query->where(function ($q) use ($user) {
+                $q->whereNull('meeting_id')
+                    ->orWhere('uploader_id', $user->id)
+                    ->orWhereHas('meeting.attendees', fn ($a) => $a->where('user_id', $user->id));
+            });
+        }
 
         if ($category = $request->string('category')->toString()) {
             $query->where('category', $category);
@@ -31,15 +40,22 @@ class DocumentController extends Controller
 
         $documents = $query->latest()->paginate(10)->withQueryString();
 
+        $meetingsQuery = Meeting::select(['id', 'title'])->orderBy('title');
+        if (! $user->isAdmin() && ! $user->isSekretaris() && ! $user->isPimpinan()) {
+            $meetingsQuery->whereHas('attendees', fn ($q) => $q->where('user_id', $user->id));
+        }
+
         return Inertia::render('documents/index', [
             'documents' => $documents,
             'filters' => $request->only(['category', 'meeting_id', 'search']),
-            'meetings' => Meeting::select(['id', 'title'])->orderBy('title')->get(),
+            'meetings' => $meetingsQuery->get(),
         ]);
     }
 
     public function store(Request $request)
     {
+        Gate::authorize('create', Document::class);
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'meeting_id' => ['nullable', 'exists:meetings,id'],

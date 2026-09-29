@@ -16,7 +16,14 @@ class MeetingController extends Controller
     {
         Gate::authorize('viewAny', Meeting::class);
 
-        $query = Meeting::query()->with(['creator:id,name', 'attendees'])->withCount(['agendas', 'attendees']);
+        $user = $request->user();
+        $baseQuery = Meeting::query()->with(['creator:id,name', 'attendees'])->withCount(['agendas', 'attendees']);
+
+        if (! $user->isAdmin() && ! $user->isSekretaris() && ! $user->isPimpinan()) {
+            $baseQuery->whereHas('attendees', fn ($q) => $q->where('user_id', $user->id));
+        }
+
+        $query = clone $baseQuery;
 
         if ($status = $request->string('status')->toString()) {
             $query->where('status', $status);
@@ -34,10 +41,10 @@ class MeetingController extends Controller
         $meetings = $query->latest('date')->paginate(10)->withQueryString();
 
         $stats = [
-            'total' => Meeting::count(),
-            'scheduled' => Meeting::where('status', 'scheduled')->count(),
-            'in_progress' => Meeting::where('status', 'in_progress')->count(),
-            'completed' => Meeting::where('status', 'completed')->count(),
+            'total' => (clone $baseQuery)->count(),
+            'scheduled' => (clone $baseQuery)->where('status', 'scheduled')->count(),
+            'in_progress' => (clone $baseQuery)->where('status', 'in_progress')->count(),
+            'completed' => (clone $baseQuery)->where('status', 'completed')->count(),
         ];
 
         return Inertia::render('meetings/index', [

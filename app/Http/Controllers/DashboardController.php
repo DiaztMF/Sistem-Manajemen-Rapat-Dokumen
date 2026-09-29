@@ -13,22 +13,43 @@ class DashboardController extends Controller
 {
     public function index(Request $request): Response
     {
-        $userId = $request->user()->id;
+        $user = $request->user();
+        $userId = $user->id;
         $now = now();
         $startOfMonth = $now->copy()->startOfMonth();
         $endOfMonth = $now->copy()->endOfMonth();
 
-        $totalMeetingsMonth = Meeting::whereBetween('date', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])->count();
+        $isManager = $user->isAdmin() || $user->isSekretaris() || $user->isPimpinan();
 
-        $upcomingMeetingsCount = Meeting::where('date', '>=', $now->toDateString())
+        $meetingsInScope = $isManager
+            ? Meeting::query()
+            : Meeting::whereHas('attendees', fn ($q) => $q->where('user_id', $userId));
+
+        $totalMeetingsMonth = (clone $meetingsInScope)
+            ->whereBetween('date', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])->count();
+
+        $upcomingMeetingsCount = (clone $meetingsInScope)
+            ->where('date', '>=', $now->toDateString())
             ->whereIn('status', ['scheduled', 'in_progress'])
             ->count();
 
-        $pendingActionItemsCount = ActionItem::whereIn('status', ['pending', 'in_progress'])->count();
+        $actionItemsInScope = $isManager
+            ? ActionItem::query()
+            : ActionItem::where('pic_id', $userId);
 
-        $recentDocumentsCount = Document::where('created_at', '>=', $now->copy()->subDays(30))->count();
+        $pendingActionItemsCount = (clone $actionItemsInScope)->whereIn('status', ['pending', 'in_progress'])->count();
 
-        $upcomingMeetings = Meeting::with(['creator', 'agendas', 'attendees.user'])
+        $recentDocumentsCount = $isManager
+            ? Document::where('created_at', '>=', $now->copy()->subDays(30))->count()
+            : Document::where('created_at', '>=', $now->copy()->subDays(30))
+                ->where(function ($q) use ($userId) {
+                    $q->whereNull('meeting_id')
+                        ->orWhere('uploader_id', $userId)
+                        ->orWhereHas('meeting.attendees', fn ($a) => $a->where('user_id', $userId));
+                })->count();
+
+        $upcomingMeetings = (clone $meetingsInScope)
+            ->with(['creator', 'agendas', 'attendees.user'])
             ->where('date', '>=', $now->toDateString())
             ->whereIn('status', ['scheduled', 'in_progress'])
             ->orderBy('date')

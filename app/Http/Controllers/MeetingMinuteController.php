@@ -16,7 +16,14 @@ class MeetingMinuteController extends Controller
 {
     public function index(Request $request)
     {
+        Gate::authorize('viewAny', MeetingMinute::class);
+
+        $user = $request->user();
         $query = MeetingMinute::query()->with(['meeting:id,title,date,start_time,end_time', 'recorder:id,name', 'reviewer:id,name']);
+
+        if (! $user->isAdmin() && ! $user->isSekretaris() && ! $user->isPimpinan()) {
+            $query->whereHas('meeting.attendees', fn ($q) => $q->where('user_id', $user->id));
+        }
 
         if ($status = $request->string('status')->toString()) {
             $query->where('status', $status);

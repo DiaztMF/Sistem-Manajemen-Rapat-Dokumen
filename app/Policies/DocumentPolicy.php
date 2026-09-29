@@ -12,6 +12,11 @@ class DocumentPolicy
         return true;
     }
 
+    public function create(User $user): bool
+    {
+        return $user->isAdmin() || $user->isSekretaris();
+    }
+
     public function download(User $user, Document $document): bool
     {
         if ($user->isAdmin() || $user->isSekretaris() || $user->isPimpinan()) {

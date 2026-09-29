@@ -49,6 +49,7 @@ export default function Dashboard({
     const user = auth?.user;
     const userRole = user?.role ?? 'peserta';
     const canCreateMeeting = userRole === 'admin' || userRole === 'sekretaris';
+    const canUploadDocument = userRole === 'admin' || userRole === 'sekretaris';
 
     const handleToggleActionItem = (item: ActionItem) => {
         const nextStatus = item.status === 'completed' ? 'pending' : 'completed';
@@ -142,12 +143,14 @@ export default function Dashboard({
                                 </Link>
                             </Button>
                         )}
-                        <Button asChild variant="outline" size="sm" className="gap-1.5">
-                            <Link href="/documents">
-                                <FolderLock className="size-4" />
-                                Unggah Dokumen
-                            </Link>
-                        </Button>
+                        {canUploadDocument && (
+                            <Button asChild variant="outline" size="sm" className="gap-1.5">
+                                <Link href="/documents">
+                                    <FolderLock className="size-4" />
+                                    Unggah Dokumen
+                                </Link>
+                            </Button>
+                        )}
                     </div>
                 </div>
 

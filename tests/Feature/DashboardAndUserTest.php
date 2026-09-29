@@ -47,6 +47,7 @@ class DashboardAndUserTest extends TestCase
         $user = $this->makeUser('peserta', 'user@test.com');
 
         $meeting = $this->makeMeeting($sekretaris);
+        $meeting->attendees()->create(['user_id' => $user->id, 'role_in_meeting' => 'participant']);
 
         ActionItem::create([
             'meeting_id' => $meeting->id,

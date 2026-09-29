@@ -17,7 +17,12 @@ class ActionItemController extends Controller
     {
         Gate::authorize('viewAny', ActionItem::class);
 
+        $user = $request->user();
         $query = ActionItem::query()->with(['pic:id,name,email', 'meeting:id,title,date']);
+
+        if (! $user->isAdmin() && ! $user->isSekretaris() && ! $user->isPimpinan()) {
+            $query->where('pic_id', $user->id);
+        }
 
         if ($status = $request->string('status')->toString()) {
             $query->where('status', $status);

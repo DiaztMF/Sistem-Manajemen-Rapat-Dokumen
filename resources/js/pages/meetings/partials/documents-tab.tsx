@@ -51,6 +51,8 @@ export default function DocumentsTab({
     documents = [],
 }: DocumentsTabProps) {
     const { auth } = usePage<{ auth: Auth }>().props;
+    const userRole = auth?.user?.role ?? 'peserta';
+    const canUploadDocument = userRole === 'admin' || userRole === 'sekretaris';
     const [isUploadOpen, setIsUploadOpen] = useState(false);
 
     const { data, setData, post, processing, errors, reset } = useForm<{
@@ -141,14 +143,15 @@ export default function DocumentsTab({
                     </p>
                 </div>
 
-                <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
-                    <DialogTrigger asChild>
-                        <Button size="sm" className="gap-1.5 self-start sm:self-auto">
-                            <FilePlus className="size-4" />
-                            Unggah Dokumen
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent>
+                {canUploadDocument && (
+                    <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
+                        <DialogTrigger asChild>
+                            <Button size="sm" className="gap-1.5 self-start sm:self-auto">
+                                <FilePlus className="size-4" />
+                                Unggah Dokumen
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
                         <DialogHeader>
                             <DialogTitle>Unggah Berkas Baru</DialogTitle>
                             <DialogDescription>
@@ -226,7 +229,8 @@ export default function DocumentsTab({
                             </DialogFooter>
                         </form>
                     </DialogContent>
-                </Dialog>
+                    </Dialog>
+                )}
             </div>
 
             {/* Documents List */}

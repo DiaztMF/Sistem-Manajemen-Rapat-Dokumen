@@ -7,9 +7,18 @@ use App\Models\User;
 
 class MeetingMinutePolicy
 {
-    public function view(User $user, MeetingMinute $minute): bool
+    public function viewAny(User $user): bool
     {
         return true;
+    }
+
+    public function view(User $user, MeetingMinute $minute): bool
+    {
+        if ($user->isAdmin() || $user->isSekretaris() || $user->isPimpinan()) {
+            return true;
+        }
+
+        return $minute->meeting->attendees()->where('user_id', $user->id)->exists();
     }
 
     public function update(User $user, MeetingMinute $minute): bool
