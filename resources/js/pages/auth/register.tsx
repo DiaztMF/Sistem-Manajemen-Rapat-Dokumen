@@ -1,120 +1,43 @@
-import { Form, Head } from '@inertiajs/react';
-import InputError from '@/components/input-error';
-import PasswordInput from '@/components/password-input';
-import TextLink from '@/components/text-link';
+import { Head, Link } from '@inertiajs/react';
+import { ArrowLeft, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import AppLogo from '@/components/app-logo';
 import { login } from '@/routes';
-import { store } from '@/routes/register';
 
-type Props = {
-    passwordRules: string;
-};
-
-export default function Register({ passwordRules }: Props) {
+export default function Register() {
     return (
-        <>
-            <Head title="Register" />
-            <Form
-                {...store.form()}
-                resetOnSuccess={['password', 'password_confirmation']}
-                disableWhileProcessing
-                className="flex flex-col gap-6"
-            >
-                {({ processing, errors }) => (
-                    <>
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
-                                <Input
-                                    id="name"
-                                    type="text"
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="name"
-                                    name="name"
-                                    placeholder="Full name"
-                                />
-                                <InputError
-                                    message={errors.name}
-                                    className="mt-2"
-                                />
-                            </div>
+        <div className="flex min-h-screen flex-col items-center justify-center bg-muted/30 p-4 sm:p-6 lg:p-8">
+            <Head title="Pendaftaran Pegawai - SmartOffice SIMRAD" />
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="email"
-                                    name="email"
-                                    placeholder="email@example.com"
-                                />
-                                <InputError message={errors.email} />
-                            </div>
+            <div className="w-full max-w-md space-y-6">
+                <div className="flex flex-col items-center text-center space-y-3">
+                    <AppLogo />
+                </div>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">Password</Label>
-                                <PasswordInput
-                                    id="password"
-                                    required
-                                    tabIndex={3}
-                                    autoComplete="new-password"
-                                    name="password"
-                                    placeholder="Password"
-                                    passwordrules={passwordRules}
-                                />
-                                <InputError message={errors.password} />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="password_confirmation">
-                                    Confirm password
-                                </Label>
-                                <PasswordInput
-                                    id="password_confirmation"
-                                    required
-                                    tabIndex={4}
-                                    autoComplete="new-password"
-                                    name="password_confirmation"
-                                    placeholder="Confirm password"
-                                    passwordrules={passwordRules}
-                                />
-                                <InputError
-                                    message={errors.password_confirmation}
-                                />
-                            </div>
-
-                            <Button
-                                type="submit"
-                                className="mt-2 w-full"
-                                tabIndex={5}
-                                data-test="register-user-button"
-                            >
-                                {processing && <Spinner />}
-                                Create account
-                            </Button>
+                <Card className="border-border shadow-xs bg-card">
+                    <CardHeader className="text-center pb-2">
+                        <div className="mx-auto mb-2 flex size-10 items-center justify-center rounded-full bg-amber-500/10 text-amber-600">
+                            <ShieldAlert className="size-5" />
                         </div>
-
-                        <div className="text-center text-sm text-muted-foreground">
-                            Already have an account?{' '}
-                            <TextLink href={login()} tabIndex={6}>
-                                Log in
-                            </TextLink>
-                        </div>
-                    </>
-                )}
-            </Form>
-        </>
+                        <CardTitle className="text-lg">Pendaftaran Publik Ditutup</CardTitle>
+                        <CardDescription>
+                            Sistem Manajemen Rapat & Dokumen bersifat internal dan tertutup.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4 pt-2 text-center">
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                            Akun pegawai hanya dapat didaftarkan secara resmi oleh <span className="font-semibold text-foreground">Administrator Sistem</span> melalui menu Manajemen Pengguna.
+                        </p>
+                        <Button asChild className="w-full gap-2 text-xs">
+                            <Link href={login()}>
+                                <ArrowLeft className="size-3.5" />
+                                Menuju Halaman Masuk
+                            </Link>
+                        </Button>
+                    </CardContent>
+                </Card>
+            </div>
+        </div>
     );
 }
-
-Register.layout = {
-    title: 'Create an account',
-    description: 'Enter your details below to create your account',
-};

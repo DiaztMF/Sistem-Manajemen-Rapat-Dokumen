@@ -161,7 +161,7 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        // Features::registration(), // Dinonaktifkan: akun pegawai hanya didaftarkan oleh Administrator internal
         Features::resetPasswords(),
         Features::emailVerification(),
         Features::twoFactorAuthentication([
