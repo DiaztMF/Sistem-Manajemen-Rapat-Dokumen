@@ -238,12 +238,11 @@ export default function DocumentsIndex({
 
     const canDeleteDocument = (doc: DocumentItem) => {
         if (!auth.user) return false;
-        if (auth.user.role && ['admin', 'sekretaris'].includes(auth.user.role)) return true;
+        if (auth.user.role === 'admin') return true;
         return doc.uploader_id === auth.user.id;
     };
 
-    const canUploadDocument =
-        !!auth.user && !!auth.user.role && ['admin', 'sekretaris'].includes(auth.user.role);
+    const canUploadDocument = !!auth.user && auth.user.role === 'admin';
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

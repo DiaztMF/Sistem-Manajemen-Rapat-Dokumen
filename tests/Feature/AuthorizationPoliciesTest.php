@@ -11,22 +11,22 @@ class AuthorizationPoliciesTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_only_authorized_users_can_create_meetings(): void
+    public function test_only_admin_can_create_meetings(): void
     {
         $admin = User::create(['name' => 'Admin', 'email' => 'admin@test.com', 'password' => 'secret', 'role' => 'admin']);
-        $sekretaris = User::create(['name' => 'Sekretaris', 'email' => 'sekretaris@test.com', 'password' => 'secret', 'role' => 'sekretaris']);
         $peserta = User::create(['name' => 'Peserta', 'email' => 'peserta@test.com', 'password' => 'secret', 'role' => 'peserta']);
+        $legacy = User::create(['name' => 'Legacy', 'email' => 'legacy@test.com', 'password' => 'secret', 'role' => 'sekretaris']);
 
         $this->assertTrue($admin->can('create', Meeting::class));
-        $this->assertTrue($sekretaris->can('create', Meeting::class));
         $this->assertFalse($peserta->can('create', Meeting::class));
+        $this->assertFalse($legacy->can('create', Meeting::class));
     }
 
-    public function test_only_pimpinan_or_admin_can_approve_minutes(): void
+    public function test_only_admin_can_approve_minutes(): void
     {
         $admin = User::create(['name' => 'Admin', 'email' => 'admin@test.com', 'password' => 'secret', 'role' => 'admin']);
-        $pimpinan = User::create(['name' => 'Pimpinan', 'email' => 'pimpinan@test.com', 'password' => 'secret', 'role' => 'pimpinan']);
-        $sekretaris = User::create(['name' => 'Sekretaris', 'email' => 'sekretaris@test.com', 'password' => 'secret', 'role' => 'sekretaris']);
+        $peserta = User::create(['name' => 'Peserta', 'email' => 'peserta@test.com', 'password' => 'secret', 'role' => 'peserta']);
+        $legacy = User::create(['name' => 'Legacy', 'email' => 'legacy@test.com', 'password' => 'secret', 'role' => 'pimpinan']);
 
         $meeting = Meeting::create([
             'title' => 'Test Meeting',
@@ -35,17 +35,17 @@ class AuthorizationPoliciesTest extends TestCase
             'end_time' => '11:00',
             'type' => 'offline',
             'location_or_link' => 'R. Rapat',
-            'created_by' => $sekretaris->id,
+            'created_by' => $admin->id,
         ]);
 
         $minute = MeetingMinute::create([
             'meeting_id' => $meeting->id,
-            'recorded_by' => $sekretaris->id,
+            'recorded_by' => $admin->id,
             'status' => 'pending_review',
         ]);
 
         $this->assertTrue($admin->can('approve', $minute));
-        $this->assertTrue($pimpinan->can('approve', $minute));
-        $this->assertFalse($sekretaris->can('approve', $minute));
+        $this->assertFalse($peserta->can('approve', $minute));
+        $this->assertFalse($legacy->can('approve', $minute));
     }
 }

@@ -20,7 +20,7 @@ class ActionItemController extends Controller
         $user = $request->user();
         $query = ActionItem::query()->with(['pic:id,name,email', 'meeting:id,title,date']);
 
-        if (! $user->isAdmin() && ! $user->isSekretaris() && ! $user->isPimpinan()) {
+        if (! $user->isAdmin()) {
             $query->where('pic_id', $user->id);
         }
 

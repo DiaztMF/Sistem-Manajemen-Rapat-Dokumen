@@ -54,10 +54,7 @@ export default function ActionItemsTab({
     const { auth } = usePage<{ auth: Auth }>().props;
     const currentUserId = auth?.user?.id;
     const userRole = auth?.user?.role ?? 'peserta';
-    const canCreate =
-        userRole === 'admin' ||
-        userRole === 'sekretaris' ||
-        meeting.created_by === currentUserId;
+    const canCreate = userRole === 'admin';
 
     const [isCreateOpen, setIsCreateOpen] = useState(false);
     const [updatingId, setUpdatingId] = useState<number | null>(null);

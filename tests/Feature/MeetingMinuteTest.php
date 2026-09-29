@@ -23,12 +23,12 @@ class MeetingMinuteTest extends TestCase
         return $user->fresh();
     }
 
-    public function test_sekretaris_can_save_and_submit_minutes(): void
+    public function test_admin_can_save_and_submit_minutes(): void
     {
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
-        $meeting = Meeting::create(['title' => 'Rapat Divisi', 'date' => '2026-11-10', 'start_time' => '10:00', 'end_time' => '11:00', 'type' => 'offline', 'location_or_link' => 'R. 1', 'created_by' => $sekretaris->id]);
+        $admin = $this->makeUser('admin', 'admin@test.com');
+        $meeting = Meeting::create(['title' => 'Rapat Divisi', 'date' => '2026-11-10', 'start_time' => '10:00', 'end_time' => '11:00', 'type' => 'offline', 'location_or_link' => 'R. 1', 'created_by' => $admin->id]);
 
-        $response = $this->actingAs($sekretaris)->post("/meetings/{$meeting->id}/minutes", [
+        $response = $this->actingAs($admin)->post("/meetings/{$meeting->id}/minutes", [
             'content_summary' => 'Pembahasan terkait anggaran',
             'decisions' => 'Anggaran disetujui sebesar 100jt',
             'submit_for_review' => true,
@@ -41,20 +41,19 @@ class MeetingMinuteTest extends TestCase
         ]);
     }
 
-    public function test_pimpinan_can_approve_minutes(): void
+    public function test_admin_can_approve_minutes(): void
     {
-        $pimpinan = $this->makeUser('pimpinan', 'pimpinan@test.com');
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
-        $meeting = Meeting::create(['title' => 'Rapat Divisi', 'date' => '2026-11-10', 'start_time' => '10:00', 'end_time' => '11:00', 'type' => 'offline', 'location_or_link' => 'R. 1', 'created_by' => $sekretaris->id]);
+        $admin = $this->makeUser('admin', 'admin@test.com');
+        $meeting = Meeting::create(['title' => 'Rapat Divisi', 'date' => '2026-11-10', 'start_time' => '10:00', 'end_time' => '11:00', 'type' => 'offline', 'location_or_link' => 'R. 1', 'created_by' => $admin->id]);
         $minute = MeetingMinute::create([
             'meeting_id' => $meeting->id,
-            'recorded_by' => $sekretaris->id,
+            'recorded_by' => $admin->id,
             'content_summary' => 'Summary',
             'decisions' => 'Decisions',
             'status' => 'pending_review',
         ]);
 
-        $response = $this->actingAs($pimpinan)->patch("/minutes/{$minute->id}/approve", [
+        $response = $this->actingAs($admin)->patch("/minutes/{$minute->id}/approve", [
             'action' => 'approve',
             'review_notes' => 'Disetujui tanpa revisi',
         ]);
@@ -63,23 +62,41 @@ class MeetingMinuteTest extends TestCase
         $this->assertDatabaseHas('meeting_minutes', [
             'id' => $minute->id,
             'status' => 'approved',
-            'reviewed_by' => $pimpinan->id,
+            'reviewed_by' => $admin->id,
         ]);
+    }
+
+    public function test_peserta_cannot_approve_minutes(): void
+    {
+        $admin = $this->makeUser('admin', 'admin@test.com');
+        $peserta = $this->makeUser('peserta', 'peserta@test.com');
+        $meeting = Meeting::create(['title' => 'Rapat Divisi', 'date' => '2026-11-10', 'start_time' => '10:00', 'end_time' => '11:00', 'type' => 'offline', 'location_or_link' => 'R. 1', 'created_by' => $admin->id]);
+        $minute = MeetingMinute::create([
+            'meeting_id' => $meeting->id,
+            'recorded_by' => $admin->id,
+            'content_summary' => 'Summary',
+            'decisions' => 'Decisions',
+            'status' => 'pending_review',
+        ]);
+
+        $this->actingAs($peserta)->patch("/minutes/{$minute->id}/approve", [
+            'action' => 'approve',
+        ])->assertForbidden();
     }
 
     public function test_can_download_pdf_for_meeting_minutes(): void
     {
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris2@test.com');
-        $meeting = Meeting::create(['title' => 'Rapat Divisi', 'date' => '2026-11-10', 'start_time' => '10:00', 'end_time' => '11:00', 'type' => 'offline', 'location_or_link' => 'R. 1', 'created_by' => $sekretaris->id]);
+        $admin = $this->makeUser('admin', 'admin2@test.com');
+        $meeting = Meeting::create(['title' => 'Rapat Divisi', 'date' => '2026-11-10', 'start_time' => '10:00', 'end_time' => '11:00', 'type' => 'offline', 'location_or_link' => 'R. 1', 'created_by' => $admin->id]);
         $minute = MeetingMinute::create([
             'meeting_id' => $meeting->id,
-            'recorded_by' => $sekretaris->id,
+            'recorded_by' => $admin->id,
             'content_summary' => 'Summary',
             'decisions' => 'Decisions',
             'status' => 'approved',
         ]);
 
-        $response = $this->actingAs($sekretaris)->get("/minutes/{$minute->id}/export-pdf");
+        $response = $this->actingAs($admin)->get("/minutes/{$minute->id}/export-pdf");
         $response->assertOk();
         $this->assertEquals('application/pdf', $response->headers->get('content-type'));
     }

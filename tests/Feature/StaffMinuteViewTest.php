@@ -39,27 +39,27 @@ class StaffMinuteViewTest extends TestCase
 
     public function test_non_attendee_cannot_export_minute_pdf(): void
     {
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
+        $admin = $this->makeUser('admin', 'admin@test.com');
         $outsider = $this->makeUser('peserta', 'outsider@test.com');
-        [$meeting, $minute] = $this->makeMeetingWithMinute($sekretaris);
+        [$meeting, $minute] = $this->makeMeetingWithMinute($admin);
 
         $this->actingAs($outsider)->get("/minutes/{$minute->id}/export-pdf")->assertForbidden();
     }
 
     public function test_non_attendee_cannot_open_meeting_detail(): void
     {
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
+        $admin = $this->makeUser('admin', 'admin@test.com');
         $outsider = $this->makeUser('peserta', 'outsider@test.com');
-        [$meeting, $minute] = $this->makeMeetingWithMinute($sekretaris);
+        [$meeting, $minute] = $this->makeMeetingWithMinute($admin);
 
         $this->actingAs($outsider)->get("/meetings/{$meeting->id}")->assertForbidden();
     }
 
     public function test_attendee_can_export_minute_pdf(): void
     {
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
+        $admin = $this->makeUser('admin', 'admin@test.com');
         $peserta = $this->makeUser('peserta', 'peserta@test.com');
-        [$meeting, $minute] = $this->makeMeetingWithMinute($sekretaris);
+        [$meeting, $minute] = $this->makeMeetingWithMinute($admin);
         $meeting->attendees()->create(['user_id' => $peserta->id, 'role_in_meeting' => 'participant']);
 
         $response = $this->actingAs($peserta)->get("/minutes/{$minute->id}/export-pdf");
@@ -67,12 +67,11 @@ class StaffMinuteViewTest extends TestCase
         $this->assertEquals('application/pdf', $response->headers->get('content-type'));
     }
 
-    public function test_pimpinan_can_export_minute_pdf(): void
+    public function test_admin_can_export_minute_pdf(): void
     {
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
-        $pimpinan = $this->makeUser('pimpinan', 'pimpinan@test.com');
-        [$meeting, $minute] = $this->makeMeetingWithMinute($sekretaris);
+        $admin = $this->makeUser('admin', 'admin@test.com');
+        [$meeting, $minute] = $this->makeMeetingWithMinute($admin);
 
-        $this->actingAs($pimpinan)->get("/minutes/{$minute->id}/export-pdf")->assertOk();
+        $this->actingAs($admin)->get("/minutes/{$minute->id}/export-pdf")->assertOk();
     }
 }

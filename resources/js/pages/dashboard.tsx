@@ -48,8 +48,8 @@ export default function Dashboard({
     const { auth } = usePage<{ auth: Auth }>().props;
     const user = auth?.user;
     const userRole = user?.role ?? 'peserta';
-    const canCreateMeeting = userRole === 'admin' || userRole === 'sekretaris';
-    const canUploadDocument = userRole === 'admin' || userRole === 'sekretaris';
+    const canCreateMeeting = userRole === 'admin';
+    const canUploadDocument = userRole === 'admin';
 
     const handleToggleActionItem = (item: ActionItem) => {
         const nextStatus = item.status === 'completed' ? 'pending' : 'completed';

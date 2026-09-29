@@ -19,7 +19,7 @@ class MeetingController extends Controller
         $user = $request->user();
         $baseQuery = Meeting::query()->with(['creator:id,name', 'attendees'])->withCount(['agendas', 'attendees']);
 
-        if (! $user->isAdmin() && ! $user->isSekretaris() && ! $user->isPimpinan()) {
+        if (! $user->isAdmin()) {
             $baseQuery->whereHas('attendees', fn ($q) => $q->where('user_id', $user->id));
         }
 

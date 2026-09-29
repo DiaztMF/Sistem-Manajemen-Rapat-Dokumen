@@ -28,11 +28,11 @@ class ActionItemAndDocumentTest extends TestCase
 
     public function test_can_create_and_update_action_item(): void
     {
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com', 'Sekretaris');
+        $admin = $this->makeUser('admin', 'admin@test.com', 'Admin');
         $pic = $this->makeUser('peserta', 'pic@test.com', 'PIC User');
-        $meeting = Meeting::create(['title' => 'Rapat', 'date' => '2026-11-10', 'start_time' => '10:00', 'end_time' => '11:00', 'type' => 'offline', 'location_or_link' => 'R. 1', 'created_by' => $sekretaris->id]);
+        $meeting = Meeting::create(['title' => 'Rapat', 'date' => '2026-11-10', 'start_time' => '10:00', 'end_time' => '11:00', 'type' => 'offline', 'location_or_link' => 'R. 1', 'created_by' => $admin->id]);
 
-        $response = $this->actingAs($sekretaris)->post("/meetings/{$meeting->id}/action-items", [
+        $response = $this->actingAs($admin)->post("/meetings/{$meeting->id}/action-items", [
             'pic_id' => $pic->id,
             'title' => 'Buat Laporan Mingguan',
             'due_date' => '2026-11-15',
@@ -56,12 +56,12 @@ class ActionItemAndDocumentTest extends TestCase
     {
         Storage::fake('local');
 
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com', 'Sekretaris');
-        $meeting = Meeting::create(['title' => 'Rapat', 'date' => '2026-11-10', 'start_time' => '10:00', 'end_time' => '11:00', 'type' => 'offline', 'location_or_link' => 'R. 1', 'created_by' => $sekretaris->id]);
+        $admin = $this->makeUser('admin', 'admin@test.com', 'Admin');
+        $meeting = Meeting::create(['title' => 'Rapat', 'date' => '2026-11-10', 'start_time' => '10:00', 'end_time' => '11:00', 'type' => 'offline', 'location_or_link' => 'R. 1', 'created_by' => $admin->id]);
 
         $file = UploadedFile::fake()->create('materi-presentasi.pdf', 500, 'application/pdf');
 
-        $uploadResponse = $this->actingAs($sekretaris)->post('/documents', [
+        $uploadResponse = $this->actingAs($admin)->post('/documents', [
             'meeting_id' => $meeting->id,
             'title' => 'Materi Rapat Divisi',
             'category' => 'materi',
@@ -74,7 +74,7 @@ class ActionItemAndDocumentTest extends TestCase
         Storage::disk('local')->assertExists($doc->file_path);
 
         // Download check
-        $downloadResponse = $this->actingAs($sekretaris)->get("/documents/{$doc->id}/download");
+        $downloadResponse = $this->actingAs($admin)->get("/documents/{$doc->id}/download");
         $downloadResponse->assertOk();
     }
 
@@ -82,9 +82,9 @@ class ActionItemAndDocumentTest extends TestCase
     {
         Storage::fake('local');
 
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com', 'Sekretaris');
+        $admin = $this->makeUser('admin', 'admin@test.com', 'Admin');
         $pic = $this->makeUser('peserta', 'pic@test.com', 'PIC');
-        $meeting = Meeting::create(['title' => 'Rapat', 'date' => '2026-11-10', 'start_time' => '10:00', 'end_time' => '11:00', 'type' => 'offline', 'location_or_link' => 'R. 1', 'created_by' => $sekretaris->id]);
+        $meeting = Meeting::create(['title' => 'Rapat', 'date' => '2026-11-10', 'start_time' => '10:00', 'end_time' => '11:00', 'type' => 'offline', 'location_or_link' => 'R. 1', 'created_by' => $admin->id]);
 
         $item = ActionItem::create([
             'meeting_id' => $meeting->id,
@@ -94,11 +94,11 @@ class ActionItemAndDocumentTest extends TestCase
             'status' => 'pending',
         ]);
 
-        $this->actingAs($sekretaris)->delete("/action-items/{$item->id}")->assertSessionHasNoErrors();
+        $this->actingAs($admin)->delete("/action-items/{$item->id}")->assertSessionHasNoErrors();
         $this->assertDatabaseMissing('action_items', ['id' => $item->id]);
 
         $file = UploadedFile::fake()->create('hapus.pdf', 100, 'application/pdf');
-        $this->actingAs($sekretaris)->post('/documents', [
+        $this->actingAs($admin)->post('/documents', [
             'title' => 'Hapus',
             'category' => 'materi',
             'file' => $file,
@@ -106,7 +106,7 @@ class ActionItemAndDocumentTest extends TestCase
         $doc = Document::first();
         $path = $doc->file_path;
 
-        $this->actingAs($sekretaris)->delete("/documents/{$doc->id}")->assertSessionHasNoErrors();
+        $this->actingAs($admin)->delete("/documents/{$doc->id}")->assertSessionHasNoErrors();
         $this->assertDatabaseMissing('documents', ['id' => $doc->id]);
         Storage::disk('local')->assertMissing($path);
     }

@@ -14,12 +14,12 @@ class DocumentPolicy
 
     public function create(User $user): bool
     {
-        return $user->isAdmin() || $user->isSekretaris();
+        return $user->isAdmin();
     }
 
     public function download(User $user, Document $document): bool
     {
-        if ($user->isAdmin() || $user->isSekretaris() || $user->isPimpinan()) {
+        if ($user->isAdmin()) {
             return true;
         }
 
@@ -32,6 +32,6 @@ class DocumentPolicy
 
     public function delete(User $user, Document $document): bool
     {
-        return $user->isAdmin() || $user->isSekretaris() || $document->uploader_id === $user->id;
+        return $user->isAdmin() || $document->uploader_id === $user->id;
     }
 }

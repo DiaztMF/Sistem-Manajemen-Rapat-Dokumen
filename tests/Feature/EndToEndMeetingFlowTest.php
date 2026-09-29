@@ -28,12 +28,10 @@ class EndToEndMeetingFlowTest extends TestCase
         $this->withoutVite();
 
         $admin = $this->makeUser('Admin', 'admin@k.id', 'admin');
-        $sekretaris = $this->makeUser('Sekretaris', 'sekretaris@k.id', 'sekretaris');
-        $pimpinan = $this->makeUser('Pimpinan', 'pimpinan@k.id', 'pimpinan');
         $peserta = $this->makeUser('Peserta', 'peserta@k.id', 'peserta');
 
         // 1. Create Meeting with Agenda and Attendees
-        $createRes = $this->actingAs($sekretaris)->post('/meetings', [
+        $createRes = $this->actingAs($admin)->post('/meetings', [
             'title' => 'Rapat Koordinasi E2E',
             'date' => '2026-11-20',
             'start_time' => '10:00',
@@ -51,14 +49,14 @@ class EndToEndMeetingFlowTest extends TestCase
         $meeting = Meeting::where('title', 'Rapat Koordinasi E2E')->first();
         $this->assertNotNull($meeting);
 
-        // 2. Notulis checks in attendee
+        // 2. Admin checks in attendee
         $attendee = $meeting->attendees->first();
-        $this->actingAs($sekretaris)->patch("/meetings/{$meeting->id}/attendees/{$attendee->id}", [
+        $this->actingAs($admin)->patch("/meetings/{$meeting->id}/attendees/{$attendee->id}", [
             'presence_status' => 'present',
         ])->assertSessionHasNoErrors();
 
         // 3. Create minutes and submit for review
-        $this->actingAs($sekretaris)->post("/meetings/{$meeting->id}/minutes", [
+        $this->actingAs($admin)->post("/meetings/{$meeting->id}/minutes", [
             'content_summary' => 'Hasil rapat e2e lengkap',
             'decisions' => 'Keputusan e2e sah',
             'submit_for_review' => true,
@@ -67,15 +65,15 @@ class EndToEndMeetingFlowTest extends TestCase
         $minute = $meeting->fresh()->minute;
         $this->assertEquals('pending_review', $minute->status);
 
-        // 4. Pimpinan approves minutes
-        $this->actingAs($pimpinan)->patch("/minutes/{$minute->id}/approve", [
+        // 4. Admin approves minutes
+        $this->actingAs($admin)->patch("/minutes/{$minute->id}/approve", [
             'action' => 'approve',
             'review_notes' => 'Disetujui',
         ])->assertSessionHasNoErrors();
         $this->assertEquals('approved', $minute->fresh()->status);
 
         // 5. Create action item
-        $this->actingAs($sekretaris)->post("/meetings/{$meeting->id}/action-items", [
+        $this->actingAs($admin)->post("/meetings/{$meeting->id}/action-items", [
             'pic_id' => $peserta->id,
             'title' => 'Follow up vendor',
             'due_date' => '2026-11-25',
@@ -90,7 +88,7 @@ class EndToEndMeetingFlowTest extends TestCase
         $this->assertEquals('completed', $item->fresh()->status);
 
         // 7. Export PDF
-        $pdfRes = $this->actingAs($sekretaris)->get("/minutes/{$minute->id}/export-pdf");
+        $pdfRes = $this->actingAs($admin)->get("/minutes/{$minute->id}/export-pdf");
         $pdfRes->assertOk();
     }
 }

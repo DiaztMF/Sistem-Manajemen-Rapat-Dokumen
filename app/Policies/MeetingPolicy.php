@@ -14,7 +14,7 @@ class MeetingPolicy
 
     public function view(User $user, Meeting $meeting): bool
     {
-        if ($user->isAdmin() || $user->isSekretaris() || $user->isPimpinan()) {
+        if ($user->isAdmin()) {
             return true;
         }
 
@@ -23,16 +23,16 @@ class MeetingPolicy
 
     public function create(User $user): bool
     {
-        return $user->isAdmin() || $user->isSekretaris();
+        return $user->isAdmin();
     }
 
     public function update(User $user, Meeting $meeting): bool
     {
-        return $user->isAdmin() || $user->isSekretaris();
+        return $user->isAdmin();
     }
 
     public function delete(User $user, Meeting $meeting): bool
     {
-        return $user->isAdmin() || $user->isSekretaris();
+        return $user->isAdmin();
     }
 }

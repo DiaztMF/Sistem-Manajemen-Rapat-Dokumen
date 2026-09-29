@@ -21,7 +21,7 @@ class MeetingMinuteController extends Controller
         $user = $request->user();
         $query = MeetingMinute::query()->with(['meeting:id,title,date,start_time,end_time', 'recorder:id,name', 'reviewer:id,name']);
 
-        if (! $user->isAdmin() && ! $user->isSekretaris() && ! $user->isPimpinan()) {
+        if (! $user->isAdmin()) {
             $query->whereHas('meeting.attendees', fn ($q) => $q->where('user_id', $user->id));
         }
 
@@ -76,7 +76,7 @@ class MeetingMinuteController extends Controller
         // ponytail: direct DB notices, add queued Mailable when email copy needed.
         if ($status === 'pending_review') {
             $now = now();
-            $recipients = User::whereIn('role', ['pimpinan', 'admin'])->pluck('id');
+            $recipients = User::where('role', 'admin')->pluck('id');
             foreach ($recipients as $userId) {
                 DB::table('notifications')->insert([
                     'id' => (string) Str::uuid(),

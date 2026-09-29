@@ -50,10 +50,7 @@ export default function MeetingShow({
     const { auth } = usePage<{ auth: Auth }>().props;
     const user = auth?.user;
     const userRole = user?.role ?? 'peserta';
-    const canManage =
-        userRole === 'admin' ||
-        userRole === 'sekretaris' ||
-        meeting.created_by === user?.id;
+    const canManage = userRole === 'admin';
 
     const [activeTab, setActiveTab] = useState<TabKey>('agenda');
     const [updatingStatus, setUpdatingStatus] = useState(false);

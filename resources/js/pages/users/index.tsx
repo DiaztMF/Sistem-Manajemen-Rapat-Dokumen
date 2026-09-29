@@ -86,8 +86,6 @@ interface UserIndexProps {
     stats: {
         total: number;
         admin: number;
-        sekretaris: number;
-        pimpinan: number;
         peserta: number;
     };
 }
@@ -277,18 +275,6 @@ export default function UserIndex({
                         Admin
                     </Badge>
                 );
-            case 'sekretaris':
-                return (
-                    <Badge className="border-sky-300 bg-sky-100 text-sky-800 hover:bg-sky-200 dark:border-sky-800 dark:bg-sky-950/50 dark:text-sky-300">
-                        Sekretaris
-                    </Badge>
-                );
-            case 'pimpinan':
-                return (
-                    <Badge className="border-emerald-300 bg-emerald-100 text-emerald-800 hover:bg-emerald-200 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300">
-                        Pimpinan
-                    </Badge>
-                );
             case 'peserta':
             default:
                 return (
@@ -331,7 +317,7 @@ export default function UserIndex({
                 </div>
 
                 {/* Metric Header Cards */}
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <Card className="shadow-xs">
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <CardTitle className="text-xs font-medium text-muted-foreground">
@@ -355,32 +341,6 @@ export default function UserIndex({
                         <CardContent>
                             <div className="text-2xl font-bold text-foreground">{stats.admin}</div>
                             <p className="text-xs text-muted-foreground">Akses penuh sistem</p>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="shadow-xs">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-xs font-medium text-sky-600 dark:text-sky-400">
-                                Sekretaris
-                            </CardTitle>
-                            <UserCog className="h-4 w-4 text-sky-600 dark:text-sky-400" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold text-foreground">{stats.sekretaris}</div>
-                            <p className="text-xs text-muted-foreground">Pengelola rapat</p>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="shadow-xs">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                                Pimpinan
-                            </CardTitle>
-                            <Shield className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold text-foreground">{stats.pimpinan}</div>
-                            <p className="text-xs text-muted-foreground">Persetujuan & review</p>
                         </CardContent>
                     </Card>
 
@@ -440,8 +400,6 @@ export default function UserIndex({
                                         <SelectContent>
                                             <SelectItem value="all">Semua Role</SelectItem>
                                             <SelectItem value="admin">Admin</SelectItem>
-                                            <SelectItem value="sekretaris">Sekretaris</SelectItem>
-                                            <SelectItem value="pimpinan">Pimpinan</SelectItem>
                                             <SelectItem value="peserta">Peserta</SelectItem>
                                         </SelectContent>
                                     </Select>
@@ -798,8 +756,6 @@ export default function UserIndex({
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="admin">Admin</SelectItem>
-                                        <SelectItem value="sekretaris">Sekretaris</SelectItem>
-                                        <SelectItem value="pimpinan">Pimpinan</SelectItem>
                                         <SelectItem value="peserta">Peserta</SelectItem>
                                     </SelectContent>
                                 </Select>
@@ -968,8 +924,6 @@ export default function UserIndex({
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="admin">Admin</SelectItem>
-                                        <SelectItem value="sekretaris">Sekretaris</SelectItem>
-                                        <SelectItem value="pimpinan">Pimpinan</SelectItem>
                                         <SelectItem value="peserta">Peserta</SelectItem>
                                     </SelectContent>
                                 </Select>

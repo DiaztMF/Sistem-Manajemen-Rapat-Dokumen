@@ -36,11 +36,11 @@ class StaffListScopingTest extends TestCase
     public function test_peserta_meeting_list_only_shows_attended_meetings(): void
     {
         $this->withoutVite();
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
+        $admin = $this->makeUser('admin', 'admin@test.com');
         $peserta = $this->makeUser('peserta', 'peserta@test.com');
 
-        $mine = $this->makeMeeting($sekretaris, 'Rapat Saya Ikuti');
-        $other = $this->makeMeeting($sekretaris, 'Rapat Orang Lain');
+        $mine = $this->makeMeeting($admin, 'Rapat Saya Ikuti');
+        $other = $this->makeMeeting($admin, 'Rapat Orang Lain');
         $mine->attendees()->create(['user_id' => $peserta->id, 'role_in_meeting' => 'participant']);
 
         $this->actingAs($peserta)->get('/meetings')->assertOk()->assertInertia(fn (Assert $page) => $page
@@ -55,17 +55,17 @@ class StaffListScopingTest extends TestCase
     {
         Storage::fake('local');
         $this->withoutVite();
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
+        $admin = $this->makeUser('admin', 'admin@test.com');
         $peserta = $this->makeUser('peserta', 'peserta@test.com');
 
-        $mine = $this->makeMeeting($sekretaris, 'Rapat Saya Ikuti');
-        $other = $this->makeMeeting($sekretaris, 'Rapat Orang Lain');
+        $mine = $this->makeMeeting($admin, 'Rapat Saya Ikuti');
+        $other = $this->makeMeeting($admin, 'Rapat Orang Lain');
         $mine->attendees()->create(['user_id' => $peserta->id, 'role_in_meeting' => 'participant']);
 
         foreach ([[$mine->id, 'Dokumen Rapat Saya'], [$other->id, 'Dokumen Rapat Lain'], [null, 'Dokumen Umum']] as [$meetingId, $title]) {
             Document::create([
                 'meeting_id' => $meetingId,
-                'uploader_id' => $sekretaris->id,
+                'uploader_id' => $admin->id,
                 'title' => $title,
                 'file_name' => 'f.pdf',
                 'file_path' => 'documents/f.pdf',
@@ -84,17 +84,17 @@ class StaffListScopingTest extends TestCase
     public function test_peserta_minute_list_only_shows_attended_meetings(): void
     {
         $this->withoutVite();
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
+        $admin = $this->makeUser('admin', 'admin@test.com');
         $peserta = $this->makeUser('peserta', 'peserta@test.com');
 
-        $mine = $this->makeMeeting($sekretaris, 'Rapat Saya Ikuti');
-        $other = $this->makeMeeting($sekretaris, 'Rapat Orang Lain');
+        $mine = $this->makeMeeting($admin, 'Rapat Saya Ikuti');
+        $other = $this->makeMeeting($admin, 'Rapat Orang Lain');
         $mine->attendees()->create(['user_id' => $peserta->id, 'role_in_meeting' => 'participant']);
 
         foreach ([$mine, $other] as $m) {
             MeetingMinute::create([
                 'meeting_id' => $m->id,
-                'recorded_by' => $sekretaris->id,
+                'recorded_by' => $admin->id,
                 'content_summary' => 'Summary',
                 'decisions' => 'Decisions',
                 'status' => 'approved',
@@ -110,11 +110,11 @@ class StaffListScopingTest extends TestCase
     public function test_peserta_action_item_list_only_shows_own_tasks(): void
     {
         $this->withoutVite();
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
+        $admin = $this->makeUser('admin', 'admin@test.com');
         $peserta = $this->makeUser('peserta', 'peserta@test.com');
         $other = $this->makeUser('peserta', 'other@test.com');
 
-        $meeting = $this->makeMeeting($sekretaris, 'Rapat');
+        $meeting = $this->makeMeeting($admin, 'Rapat');
         $meeting->attendees()->create(['user_id' => $peserta->id, 'role_in_meeting' => 'participant']);
 
         ActionItem::create(['meeting_id' => $meeting->id, 'pic_id' => $peserta->id, 'title' => 'Tugas Saya', 'due_date' => now()->addDay()->toDateString(), 'status' => 'pending']);
@@ -130,11 +130,11 @@ class StaffListScopingTest extends TestCase
     public function test_peserta_dashboard_counts_are_scoped(): void
     {
         $this->withoutVite();
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
+        $admin = $this->makeUser('admin', 'admin@test.com');
         $peserta = $this->makeUser('peserta', 'peserta@test.com');
 
-        $mine = $this->makeMeeting($sekretaris, 'Rapat Saya Ikuti');
-        $this->makeMeeting($sekretaris, 'Rapat Orang Lain');
+        $mine = $this->makeMeeting($admin, 'Rapat Saya Ikuti');
+        $this->makeMeeting($admin, 'Rapat Orang Lain');
         $mine->attendees()->create(['user_id' => $peserta->id, 'role_in_meeting' => 'participant']);
 
         ActionItem::create(['meeting_id' => $mine->id, 'pic_id' => $peserta->id, 'title' => 'Tugas Saya', 'due_date' => now()->addDay()->toDateString(), 'status' => 'pending']);
@@ -148,17 +148,17 @@ class StaffListScopingTest extends TestCase
         );
     }
 
-    public function test_sekretaris_still_sees_everything(): void
+    public function test_admin_still_sees_everything(): void
     {
         $this->withoutVite();
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
+        $admin = $this->makeUser('admin', 'admin@test.com');
         $peserta = $this->makeUser('peserta', 'peserta@test.com');
 
-        $a = $this->makeMeeting($sekretaris, 'Rapat A');
-        $b = $this->makeMeeting($sekretaris, 'Rapat B');
+        $a = $this->makeMeeting($admin, 'Rapat A');
+        $b = $this->makeMeeting($admin, 'Rapat B');
         $a->attendees()->create(['user_id' => $peserta->id, 'role_in_meeting' => 'participant']);
 
-        $this->actingAs($sekretaris)->get('/meetings')->assertOk()->assertInertia(fn (Assert $page) => $page
+        $this->actingAs($admin)->get('/meetings')->assertOk()->assertInertia(fn (Assert $page) => $page
             ->has('meetings.data', 2)
             ->where('stats.total', 2)
         );

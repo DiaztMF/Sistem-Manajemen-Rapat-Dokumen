@@ -221,7 +221,7 @@ export default function ActionItemsIndex({
 
     const canEditItem = (item: ActionItem) => {
         if (!auth.user) return false;
-        if (auth.user.role && ['admin', 'sekretaris'].includes(auth.user.role)) return true;
+        if (auth.user.role === 'admin') return true;
         return item.pic_id === auth.user.id;
     };
 

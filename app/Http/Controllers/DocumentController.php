@@ -18,7 +18,7 @@ class DocumentController extends Controller
         $user = $request->user();
         $query = Document::query()->with(['uploader:id,name', 'meeting:id,title']);
 
-        if (! $user->isAdmin() && ! $user->isSekretaris() && ! $user->isPimpinan()) {
+        if (! $user->isAdmin()) {
             $query->where(function ($q) use ($user) {
                 $q->whereNull('meeting_id')
                     ->orWhere('uploader_id', $user->id)
@@ -41,7 +41,7 @@ class DocumentController extends Controller
         $documents = $query->latest()->paginate(10)->withQueryString();
 
         $meetingsQuery = Meeting::select(['id', 'title'])->orderBy('title');
-        if (! $user->isAdmin() && ! $user->isSekretaris() && ! $user->isPimpinan()) {
+        if (! $user->isAdmin()) {
             $meetingsQuery->whereHas('attendees', fn ($q) => $q->where('user_id', $user->id));
         }
 

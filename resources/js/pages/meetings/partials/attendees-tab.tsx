@@ -35,10 +35,7 @@ export default function AttendeesTab({
 }: AttendeesTabProps) {
     const { auth } = usePage<{ auth: Auth }>().props;
     const userRole = auth?.user?.role ?? 'peserta';
-    const canManagePresence =
-        userRole === 'admin' ||
-        userRole === 'sekretaris' ||
-        meeting.created_by === auth?.user?.id;
+    const canManagePresence = userRole === 'admin';
 
     const [updatingId, setUpdatingId] = useState<number | null>(null);
 

@@ -32,7 +32,7 @@ export default function Welcome() {
         },
         {
             icon: FileText,
-            title: 'Notulen & Approval Pimpinan',
+            title: 'Notulen & Pengesahan Dokumen',
             description:
                 'Catat rangkuman jalannya rapat dan butir keputusan resmi. Alur verifikasi berjenjang hingga pengesahan dan cetak berkas PDF resmi berkop surat.',
             badge: 'Akuntabilitas',
@@ -58,9 +58,7 @@ export default function Welcome() {
 
     const demoAccounts = [
         { role: 'Admin Sistem', email: 'admin@kantor.id', dept: 'Teknologi Informasi', icon: '👑' },
-        { role: 'Direktur Utama (Pimpinan)', email: 'pimpinan@kantor.id', dept: 'Manajemen Eksekutif', icon: '👔' },
-        { role: 'Sekretaris / Notulis', email: 'sekretaris@kantor.id', dept: 'Tata Usaha & Protokoler', icon: '📝' },
-        { role: 'Peserta / Ka. Divisi TI', email: 'ti.andi@kantor.id', dept: 'Teknologi Informasi', icon: '💼' },
+        { role: 'Staff / Peserta', email: 'ti.andi@kantor.id', dept: 'Teknologi Informasi', icon: '💼' },
     ];
 
     return (
@@ -107,7 +105,7 @@ export default function Welcome() {
                             </h1>
                             <p className="mt-5 text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto text-balance">
                                 Platform terintegrasi untuk menjadwalkan rapat kerja, menyusun agenda, mencatat kehadiran presensi peserta,
-                                menyusun notulen terstandar dengan approval pimpinan, hingga memantau komitmen tindak lanjut hasil keputusan.
+                                menyusun notulen terstandar dengan pengesahan resmi, hingga memantau komitmen tindak lanjut hasil keputusan.
                             </p>
                             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                                 {auth.user ? (
@@ -210,7 +208,7 @@ export default function Welcome() {
                 <footer className="border-t border-border/60 py-6 text-center text-xs text-muted-foreground bg-muted/30">
                     <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
                         <p>© {new Date().getFullYear()} SmartOffice SIMRAD — Sistem Manajemen Rapat & Dokumen Kantor.</p>
-                        <p className="text-[11px]">Portal internal terbatas untuk pegawai dan pimpinan kantor.</p>
+                        <p className="text-[11px]">Portal internal terbatas untuk seluruh pegawai dan administrator kantor.</p>
                     </div>
                 </footer>
             </div>

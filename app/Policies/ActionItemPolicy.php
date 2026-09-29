@@ -14,12 +14,12 @@ class ActionItemPolicy
 
     public function create(User $user): bool
     {
-        return $user->isAdmin() || $user->isSekretaris();
+        return $user->isAdmin();
     }
 
     public function update(User $user, ActionItem $item): bool
     {
-        if ($user->isAdmin() || $user->isSekretaris()) {
+        if ($user->isAdmin()) {
             return true;
         }
 
@@ -28,6 +28,6 @@ class ActionItemPolicy
 
     public function delete(User $user, ActionItem $item): bool
     {
-        return $user->isAdmin() || $user->isSekretaris();
+        return $user->isAdmin();
     }
 }

@@ -17,9 +17,10 @@ class SeederTest extends TestCase
         $this->seed(DatabaseSeeder::class);
 
         $this->assertDatabaseHas('users', ['email' => 'admin@kantor.id', 'role' => 'admin']);
-        $this->assertDatabaseHas('users', ['email' => 'pimpinan@kantor.id', 'role' => 'pimpinan']);
-        $this->assertDatabaseHas('users', ['email' => 'sekretaris@kantor.id', 'role' => 'sekretaris']);
+        $this->assertDatabaseHas('users', ['email' => 'pimpinan@kantor.id', 'role' => 'peserta']);
+        $this->assertDatabaseHas('users', ['email' => 'sekretaris@kantor.id', 'role' => 'peserta']);
         $this->assertDatabaseHas('users', ['email' => 'ti.andi@kantor.id', 'role' => 'peserta']);
+        $this->assertEquals(0, User::whereIn('role', ['sekretaris', 'pimpinan'])->count());
 
         $this->assertTrue(Meeting::count() >= 3);
         $this->assertTrue(MeetingMinute::where('status', 'approved')->exists());

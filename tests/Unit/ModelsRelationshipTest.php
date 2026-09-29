@@ -20,7 +20,7 @@ class ModelsRelationshipTest extends TestCase
             'name' => 'Creator',
             'email' => 'creator@kantor.id',
             'password' => bcrypt('password'),
-            'role' => 'sekretaris',
+            'role' => 'admin',
         ]);
 
         $attendeeUser = User::create([

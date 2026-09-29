@@ -30,7 +30,7 @@ class MinuteApprovedNotification extends Notification
 
         return [
             'title' => 'Notulen Rapat Telah Disetujui',
-            'message' => "Notulen untuk rapat '{$title}' telah disetujui oleh Pimpinan.",
+            'message' => "Notulen untuk rapat '{$title}' telah disetujui oleh Admin.",
             'url' => $meeting ? route('meetings.show', $meeting->id) : route('minutes.index'),
             'minute_id' => $this->minute->id,
             'meeting_id' => $this->minute->meeting_id,

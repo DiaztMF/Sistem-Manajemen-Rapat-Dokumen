@@ -47,8 +47,6 @@ class UserController extends Controller
             'stats' => [
                 'total' => User::count(),
                 'admin' => User::where('role', 'admin')->count(),
-                'sekretaris' => User::where('role', 'sekretaris')->count(),
-                'pimpinan' => User::where('role', 'pimpinan')->count(),
                 'peserta' => User::where('role', 'peserta')->count(),
             ],
         ]);
@@ -62,7 +60,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'role' => ['required', Rule::in(['admin', 'sekretaris', 'pimpinan', 'peserta'])],
+            'role' => ['required', Rule::in(['admin', 'peserta'])],
             'position' => 'nullable|string|max:255',
             'department' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:50',
@@ -85,7 +83,7 @@ class UserController extends Controller
             'name' => 'sometimes|required|string|max:255',
             'email' => ['sometimes', 'required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|string|min:8',
-            'role' => ['sometimes', 'required', Rule::in(['admin', 'sekretaris', 'pimpinan', 'peserta'])],
+            'role' => ['sometimes', 'required', Rule::in(['admin', 'peserta'])],
             'position' => 'nullable|string|max:255',
             'department' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:50',

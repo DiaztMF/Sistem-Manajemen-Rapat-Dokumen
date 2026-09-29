@@ -27,8 +27,8 @@ Semua akun menggunakan kata sandi default: `password`
 | Peran (Role) | Nama Pengguna | Alamat Email | Departemen / Jabatan |
 |---|---|---|---|
 | **Admin** | Budi Pratama | `admin@kantor.id` | TI / Administrator Sistem |
-| **Pimpinan** | Dr. H. Hendra Wijaya | `pimpinan@kantor.id` | Manajemen Eksekutif / Direktur Utama |
-| **Sekretaris / Notulis** | Siti Rahmawati | `sekretaris@kantor.id` | Tata Usaha / Sekretaris Eksekutif |
+| **Peserta (Eksekutif)** | Dr. H. Hendra Wijaya | `pimpinan@kantor.id` | Manajemen Eksekutif / Direktur Utama |
+| **Peserta (Tata Usaha)** | Siti Rahmawati | `sekretaris@kantor.id` | Tata Usaha / Sekretaris Eksekutif |
 | **Peserta (TI)** | Andi Saputra | `ti.andi@kantor.id` | TI / Kepala Divisi TI |
 | **Peserta (SDM)** | Maya Anggraini | `sdm.maya@kantor.id` | SDM / Kepala Divisi SDM |
 | **Peserta (Keuangan)** | Reza Pahlevi | `keuangan.reza@kantor.id` | Keuangan / Analis Keuangan |
@@ -48,7 +48,7 @@ Semua akun menggunakan kata sandi default: `password`
    - Halaman detail rapat dengan antarmuka 5 tab terintegrasi:
      - **Tab 1 — Detail & Agenda:** Rincian waktu, lokasi/tautan, dan susunan topik.
      - **Tab 2 — Peserta & Presensi:** Tabel absensi real-time (Hadir, Izin, Absen) berwaktu otomatis.
-     - **Tab 3 — Notulen:** Editor catatan & keputusan, alur pengajuan review, approval pimpinan, dan unduh PDF.
+     - **Tab 3 — Notulen:** Editor catatan & keputusan, alur pengajuan review, approval admin, dan unduh PDF.
      - **Tab 4 — Tindak Lanjut:** Manajemen penugasan PIC, deadline, dan update progress penyelesaian.
      - **Tab 5 — Dokumen:** Unggah & unduh materi presentasi, surat undangan, dan berkas lampiran.
 3. **Notulen Rapat & Ekspor PDF (`/minutes`):**

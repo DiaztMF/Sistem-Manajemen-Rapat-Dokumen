@@ -44,24 +44,14 @@ class StaffDocumentUploadTest extends TestCase
         $this->assertEquals(0, Document::count());
     }
 
-    public function test_pimpinan_cannot_upload_document(): void
+    public function test_admin_can_upload_document(): void
     {
         Storage::fake('local');
 
-        $pimpinan = $this->makeUser('pimpinan', 'pimpinan@test.com');
+        $admin = $this->makeUser('admin', 'admin@test.com');
+        $meeting = Meeting::create(['title' => 'Rapat', 'date' => '2026-11-10', 'start_time' => '10:00', 'end_time' => '11:00', 'type' => 'offline', 'location_or_link' => 'R. 1', 'created_by' => $admin->id]);
 
-        $this->actingAs($pimpinan)->post('/documents', $this->uploadPayload())->assertForbidden();
-        $this->assertEquals(0, Document::count());
-    }
-
-    public function test_sekretaris_can_upload_document(): void
-    {
-        Storage::fake('local');
-
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
-        $meeting = Meeting::create(['title' => 'Rapat', 'date' => '2026-11-10', 'start_time' => '10:00', 'end_time' => '11:00', 'type' => 'offline', 'location_or_link' => 'R. 1', 'created_by' => $sekretaris->id]);
-
-        $response = $this->actingAs($sekretaris)->post('/documents', array_merge($this->uploadPayload(), [
+        $response = $this->actingAs($admin)->post('/documents', array_merge($this->uploadPayload(), [
             'meeting_id' => $meeting->id,
         ]));
 

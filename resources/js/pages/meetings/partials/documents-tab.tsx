@@ -52,7 +52,7 @@ export default function DocumentsTab({
 }: DocumentsTabProps) {
     const { auth } = usePage<{ auth: Auth }>().props;
     const userRole = auth?.user?.role ?? 'peserta';
-    const canUploadDocument = userRole === 'admin' || userRole === 'sekretaris';
+    const canUploadDocument = userRole === 'admin';
     const [isUploadOpen, setIsUploadOpen] = useState(false);
 
     const { data, setData, post, processing, errors, reset } = useForm<{

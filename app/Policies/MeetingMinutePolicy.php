@@ -14,7 +14,7 @@ class MeetingMinutePolicy
 
     public function view(User $user, MeetingMinute $minute): bool
     {
-        if ($user->isAdmin() || $user->isSekretaris() || $user->isPimpinan()) {
+        if ($user->isAdmin()) {
             return true;
         }
 
@@ -23,20 +23,16 @@ class MeetingMinutePolicy
 
     public function update(User $user, MeetingMinute $minute): bool
     {
-        if ($minute->status === 'approved' && ! $user->isPimpinan() && ! $user->isAdmin()) {
-            return false;
-        }
-
-        return $user->isAdmin() || $user->isSekretaris();
+        return $user->isAdmin();
     }
 
     public function submitForReview(User $user, MeetingMinute $minute): bool
     {
-        return $user->isAdmin() || $user->isSekretaris();
+        return $user->isAdmin();
     }
 
     public function approve(User $user, MeetingMinute $minute): bool
     {
-        return $user->isAdmin() || $user->role === 'pimpinan';
+        return $user->isAdmin();
     }
 }

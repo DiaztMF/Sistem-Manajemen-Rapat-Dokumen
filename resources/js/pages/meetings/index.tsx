@@ -73,7 +73,7 @@ export default function MeetingIndex({
 }: MeetingIndexProps) {
     const { auth } = usePage<{ auth: Auth }>().props;
     const userRole = auth?.user?.role ?? 'peserta';
-    const canCreate = userRole === 'admin' || userRole === 'sekretaris';
+    const canCreate = userRole === 'admin';
 
     const [search, setSearch] = useState(filters.search ?? '');
     const [status, setStatus] = useState(filters.status ?? 'all');

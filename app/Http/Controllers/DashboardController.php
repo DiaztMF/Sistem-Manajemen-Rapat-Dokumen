@@ -19,7 +19,7 @@ class DashboardController extends Controller
         $startOfMonth = $now->copy()->startOfMonth();
         $endOfMonth = $now->copy()->endOfMonth();
 
-        $isManager = $user->isAdmin() || $user->isSekretaris() || $user->isPimpinan();
+        $isManager = $user->isAdmin();
 
         $meetingsInScope = $isManager
             ? Meeting::query()

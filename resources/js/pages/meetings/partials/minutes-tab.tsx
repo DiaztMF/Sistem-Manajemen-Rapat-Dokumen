@@ -49,12 +49,7 @@ export default function MinutesTab({ meeting, minute }: MinutesTabProps) {
     const user = auth?.user;
     const userRole = user?.role ?? 'peserta';
 
-    // Permissions
-    const isPimpinan = userRole === 'pimpinan' || userRole === 'admin';
-    const isSekretarisOrAdmin =
-        userRole === 'admin' ||
-        userRole === 'sekretaris' ||
-        meeting.created_by === user?.id;
+    const isAdmin = userRole === 'admin';
 
     // Review revision dialog state
     const [revisionDialogOpen, setRevisionDialogOpen] = useState(false);
@@ -101,7 +96,7 @@ export default function MinutesTab({ meeting, minute }: MinutesTabProps) {
                 return (
                     <Badge variant="secondary" className="gap-1.5 bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
                         <CheckCircle2 className="size-3.5 text-emerald-600" />
-                        Disetujui Pimpinan
+                        Disetujui Admin
                     </Badge>
                 );
             case 'pending_review':
@@ -163,7 +158,7 @@ export default function MinutesTab({ meeting, minute }: MinutesTabProps) {
             {minute?.review_notes && (
                 <Alert variant="destructive">
                     <AlertCircle className="size-4" />
-                    <AlertTitle>Catatan Perbaikan dari Pimpinan</AlertTitle>
+                    <AlertTitle>Catatan Perbaikan dari Admin</AlertTitle>
                     <AlertDescription className="text-xs mt-1">
                         {minute.review_notes}
                     </AlertDescription>
@@ -171,7 +166,7 @@ export default function MinutesTab({ meeting, minute }: MinutesTabProps) {
             )}
 
             {/* Pimpinan Action Bar: Approve or Request Revision */}
-            {isPimpinan && minute && minute.status === 'pending_review' && (
+                {isAdmin && minute && minute.status === 'pending_review' && (
                 <Card className="border-amber-200 dark:border-amber-900 bg-amber-50/50 dark:bg-amber-950/20">
                     <CardHeader className="pb-3">
                         <div className="flex items-center gap-2">
@@ -179,7 +174,7 @@ export default function MinutesTab({ meeting, minute }: MinutesTabProps) {
                             <CardTitle className="text-base">Persetujuan & Verifikasi Notulen</CardTitle>
                         </div>
                         <CardDescription>
-                            Sebagai Pimpinan, Anda dapat meninjau ringkasan hasil rapat dan memutuskan untuk menyetujui atau meminta revisi.
+                            Sebagai Admin, Anda dapat meninjau ringkasan hasil rapat dan memutuskan untuk menyetujui atau meminta revisi.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-wrap items-center gap-3">
@@ -240,7 +235,7 @@ export default function MinutesTab({ meeting, minute }: MinutesTabProps) {
             )}
 
             {/* Readonly View when Approved or not allowed to edit */}
-            {minute?.status === 'approved' && !isSekretarisOrAdmin ? (
+                    {minute?.status === 'approved' && !isAdmin ? (
                 <div className="space-y-6">
                     <Card>
                         <CardHeader>
@@ -314,7 +309,7 @@ export default function MinutesTab({ meeting, minute }: MinutesTabProps) {
                     </Card>
 
                     {/* Submit Actions */}
-                    {isSekretarisOrAdmin && (
+                                {isAdmin && (
                         <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-2">
                             <Button
                                 type="button"
@@ -335,7 +330,7 @@ export default function MinutesTab({ meeting, minute }: MinutesTabProps) {
                                 className="gap-2 w-full sm:w-auto"
                             >
                                 <Send className="size-4" />
-                                Ajukan Notulen ke Pimpinan
+                                Ajukan Notulen untuk Persetujuan
                             </Button>
                         </div>
                     )}

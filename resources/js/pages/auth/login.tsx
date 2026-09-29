@@ -24,9 +24,7 @@ export default function Login({ status, canResetPassword }: Props) {
 
     const demoUsers = [
         { label: 'Admin', role: 'Administrator', email: 'admin@kantor.id', icon: '👑' },
-        { label: 'Pimpinan', role: 'Direktur Utama', email: 'pimpinan@kantor.id', icon: '👔' },
-        { label: 'Sekretaris', role: 'Sekretaris Eksekutif', email: 'sekretaris@kantor.id', icon: '📝' },
-        { label: 'Peserta', role: 'Staff TI', email: 'ti.andi@kantor.id', icon: '💼' },
+        { label: 'Staff / Pegawai', role: 'Peserta Rapat', email: 'ti.andi@kantor.id', icon: '💼' },
     ];
 
     const handleQuickFill = (email: string) => {

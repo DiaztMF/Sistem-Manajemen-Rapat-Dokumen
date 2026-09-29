@@ -55,16 +55,6 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
         return $this->role === 'admin';
     }
 
-    public function isSekretaris(): bool
-    {
-        return in_array($this->role, ['admin', 'sekretaris'], true);
-    }
-
-    public function isPimpinan(): bool
-    {
-        return in_array($this->role, ['admin', 'pimpinan'], true);
-    }
-
     public function meetingsCreated(): HasMany
     {
         return $this->hasMany(Meeting::class, 'created_by');

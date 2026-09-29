@@ -22,12 +22,12 @@ class MeetingControllerTest extends TestCase
         return $user->fresh();
     }
 
-    public function test_sekretaris_can_create_meeting_with_agendas_and_attendees(): void
+    public function test_admin_can_create_meeting_with_agendas_and_attendees(): void
     {
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
+        $admin = $this->makeUser('admin', 'admin@test.com');
         $peserta = $this->makeUser('peserta', 'peserta1@test.com');
 
-        $response = $this->actingAs($sekretaris)->post('/meetings', [
+        $response = $this->actingAs($admin)->post('/meetings', [
             'title' => 'Rapat Kerja Tahunan',
             'description' => 'Membahas roadmap tahun depan',
             'date' => '2026-11-10',
@@ -68,7 +68,7 @@ class MeetingControllerTest extends TestCase
 
     public function test_can_update_attendee_presence(): void
     {
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
+        $admin = $this->makeUser('admin', 'admin@test.com');
         $peserta = $this->makeUser('peserta', 'peserta@test.com');
 
         $meeting = Meeting::create([
@@ -78,7 +78,7 @@ class MeetingControllerTest extends TestCase
             'end_time' => '10:00',
             'type' => 'offline',
             'location_or_link' => 'R. 1',
-            'created_by' => $sekretaris->id,
+            'created_by' => $admin->id,
         ]);
 
         $attendee = $meeting->attendees()->create([
@@ -87,7 +87,7 @@ class MeetingControllerTest extends TestCase
             'presence_status' => 'pending',
         ]);
 
-        $response = $this->actingAs($sekretaris)->patch("/meetings/{$meeting->id}/attendees/{$attendee->id}", [
+        $response = $this->actingAs($admin)->patch("/meetings/{$meeting->id}/attendees/{$attendee->id}", [
             'presence_status' => 'present',
             'notes' => 'Tepat waktu',
         ]);
@@ -102,7 +102,7 @@ class MeetingControllerTest extends TestCase
 
     public function test_can_list_update_status_and_delete_meeting(): void
     {
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
+        $admin = $this->makeUser('admin', 'admin@test.com');
         $peserta = $this->makeUser('peserta', 'peserta@test.com');
 
         $meeting = Meeting::create([
@@ -113,21 +113,21 @@ class MeetingControllerTest extends TestCase
             'type' => 'offline',
             'location_or_link' => 'R. 1',
             'status' => 'scheduled',
-            'created_by' => $sekretaris->id,
+            'created_by' => $admin->id,
         ]);
         $meeting->attendees()->create(['user_id' => $peserta->id, 'role_in_meeting' => 'participant']);
 
         $this->withoutVite();
-        $this->actingAs($sekretaris)->get('/meetings')->assertOk();
-        $this->actingAs($sekretaris)->get("/meetings/{$meeting->id}")->assertOk();
+        $this->actingAs($admin)->get('/meetings')->assertOk();
+        $this->actingAs($admin)->get("/meetings/{$meeting->id}")->assertOk();
 
         foreach (['in_progress', 'completed', 'cancelled'] as $status) {
-            $this->actingAs($sekretaris)->patch("/meetings/{$meeting->id}/status", ['status' => $status])
+            $this->actingAs($admin)->patch("/meetings/{$meeting->id}/status", ['status' => $status])
                 ->assertRedirect();
             $this->assertDatabaseHas('meetings', ['id' => $meeting->id, 'status' => $status]);
         }
 
-        $this->actingAs($sekretaris)->delete("/meetings/{$meeting->id}")->assertRedirect('/meetings');
+        $this->actingAs($admin)->delete("/meetings/{$meeting->id}")->assertRedirect('/meetings');
         $this->assertDatabaseMissing('meetings', ['id' => $meeting->id]);
     }
 }

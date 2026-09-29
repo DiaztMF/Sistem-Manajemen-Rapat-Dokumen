@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Dr. H. Hendra Wijaya',
                 'password' => $password,
-                'role' => 'pimpinan',
+                'role' => 'peserta',
                 'position' => 'Direktur Utama',
                 'department' => 'Manajemen Eksekutif',
                 'phone' => '081234567802',
@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Siti Rahmawati',
                 'password' => $password,
-                'role' => 'sekretaris',
+                'role' => 'peserta',
                 'position' => 'Sekretaris Eksekutif',
                 'department' => 'Tata Usaha & Protokoler',
                 'phone' => '081234567803',

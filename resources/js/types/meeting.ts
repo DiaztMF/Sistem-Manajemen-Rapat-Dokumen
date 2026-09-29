@@ -1,6 +1,6 @@
 import type { User } from './auth';
 
-export type Role = 'admin' | 'sekretaris' | 'pimpinan' | 'peserta';
+export type Role = 'admin' | 'peserta';
 
 export interface MeetingAgenda {
     id: number;

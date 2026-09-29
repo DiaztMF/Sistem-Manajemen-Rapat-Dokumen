@@ -43,10 +43,10 @@ class DashboardAndUserTest extends TestCase
     public function test_user_can_access_dashboard_with_kpi_metrics(): void
     {
         $this->withoutVite();
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
+        $admin = $this->makeUser('admin', 'admin@test.com');
         $user = $this->makeUser('peserta', 'user@test.com');
 
-        $meeting = $this->makeMeeting($sekretaris);
+        $meeting = $this->makeMeeting($admin);
         $meeting->attendees()->create(['user_id' => $user->id, 'role_in_meeting' => 'participant']);
 
         ActionItem::create([
@@ -100,13 +100,13 @@ class DashboardAndUserTest extends TestCase
         // update
         $this->actingAs($admin)->from('/users')->put("/users/{$newUser->id}", [
             'name' => 'Pegawai Updated',
-            'role' => 'sekretaris',
+            'role' => 'admin',
             'department' => 'Tata Usaha & Protokoler',
         ])->assertRedirect('/users');
         $this->assertDatabaseHas('users', [
             'id' => $newUser->id,
             'name' => 'Pegawai Updated',
-            'role' => 'sekretaris',
+            'role' => 'admin',
         ]);
 
         // toggle active status
@@ -138,12 +138,35 @@ class DashboardAndUserTest extends TestCase
         ])->assertForbidden();
     }
 
+    public function test_legacy_roles_are_rejected_in_user_management(): void
+    {
+        $admin = $this->makeUser('admin', 'admin@test.com');
+
+        foreach (['sekretaris', 'pimpinan'] as $legacyRole) {
+            $response = $this->actingAs($admin)->from('/users')->post('/users', [
+                'name' => 'Legacy User',
+                'email' => "legacy-{$legacyRole}@test.com",
+                'password' => 'password123',
+                'role' => $legacyRole,
+            ]);
+
+            $response->assertSessionHasErrors('role');
+            $this->assertDatabaseMissing('users', ['email' => "legacy-{$legacyRole}@test.com"]);
+        }
+
+        $victim = $this->makeUser('peserta', 'victim@test.com');
+        $this->actingAs($admin)->from('/users')->put("/users/{$victim->id}", [
+            'role' => 'sekretaris',
+        ])->assertSessionHasErrors('role');
+        $this->assertDatabaseHas('users', ['id' => $victim->id, 'role' => 'peserta']);
+    }
+
     public function test_notification_listing_and_mark_as_read(): void
     {
-        $sekretaris = $this->makeUser('sekretaris', 'sekretaris@test.com');
+        $admin = $this->makeUser('admin', 'admin@test.com');
         $user = $this->makeUser('peserta', 'notif@test.com');
 
-        $meeting = $this->makeMeeting($sekretaris);
+        $meeting = $this->makeMeeting($admin);
 
         $user->notify(new MeetingInvitationNotification($meeting));
         $this->assertEquals(1, $user->fresh()->unreadNotifications()->count());
