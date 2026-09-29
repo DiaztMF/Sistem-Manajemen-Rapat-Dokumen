@@ -12,7 +12,6 @@ import { Spinner } from '@/components/ui/spinner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
-import AppLogo from '@/components/app-logo';
 
 type Props = {
     status?: string;
@@ -46,7 +45,6 @@ export default function Login({ status, canResetPassword }: Props) {
                         <ArrowLeft className="size-3.5" />
                         Kembali ke Halaman Beranda
                     </Link>
-                    <AppLogo />
                     <div className="space-y-1">
                         <h1 className="text-xl font-bold tracking-tight">Portal Masuk Pegawai</h1>
                         <p className="text-xs text-muted-foreground">
