@@ -8,7 +8,7 @@ import { login } from '@/routes';
 export default function Register() {
     return (
         <div className="flex min-h-screen flex-col items-center justify-center bg-muted/30 p-4 sm:p-6 lg:p-8">
-            <Head title="Pendaftaran Pegawai - SmartOffice SIMRAD" />
+            <Head title="Pendaftaran Pegawai - Office Management" />
 
             <div className="w-full max-w-md space-y-6">
                 <div className="flex flex-col items-center text-center space-y-3">

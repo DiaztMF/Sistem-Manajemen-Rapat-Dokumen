@@ -8,7 +8,7 @@ export default function AppLogo() {
             </div>
             <div className="flex flex-col text-left">
                 <span className="text-sm font-bold tracking-tight text-foreground leading-none">
-                    SmartOffice SIMRAD
+                    Office Management
                 </span>
                 <span className="text-[10px] text-muted-foreground font-medium mt-0.5">
                     Manajemen Rapat & Dokumen

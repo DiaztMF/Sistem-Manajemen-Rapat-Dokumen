@@ -43,7 +43,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import AppLayout from '@/layouts/app-layout';
 import type { Auth, BreadcrumbItem, DocumentItem, Meeting } from '@/types';
 
 interface PaginatedDocuments {
@@ -245,7 +244,7 @@ export default function DocumentsIndex({
     const canUploadDocument = !!auth.user && auth.user.role === 'admin';
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <>
             <Head title="Repositori Dokumen Rapat" />
 
             <div className="flex h-full flex-1 flex-col gap-6 p-4 md:p-6 max-w-7xl mx-auto w-full">
@@ -673,6 +672,10 @@ export default function DocumentsIndex({
                     </DialogContent>
                 </Dialog>
             </div>
-        </AppLayout>
+        </>
     );
 }
+
+DocumentsIndex.layout = {
+    breadcrumbs,
+};

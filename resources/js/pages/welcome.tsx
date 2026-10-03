@@ -63,7 +63,7 @@ export default function Welcome() {
 
     return (
         <>
-            <Head title="SmartOffice SIMRAD — Sistem Manajemen Rapat & Dokumen Kantor" />
+            <Head title="Office Management — Sistem Manajemen Rapat & Dokumen Kantor" />
             <div className="min-h-screen bg-background text-foreground flex flex-col selection:bg-primary selection:text-primary-foreground">
                 {/* Navbar */}
                 <header className="sticky top-0 z-40 border-b border-border/60 bg-background/95 backdrop-blur-md">

@@ -34,7 +34,7 @@ export default function Login({ status, canResetPassword }: Props) {
 
     return (
         <div className="flex min-h-screen flex-col items-center justify-center bg-muted/30 p-4 sm:p-6 lg:p-8">
-            <Head title="Masuk ke Portal SmartOffice SIMRAD" />
+            <Head title="Masuk ke Portal Office Management" />
 
             <div className="w-full max-w-md space-y-6">
                 {/* Back to Home & Logo Header */}

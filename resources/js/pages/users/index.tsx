@@ -59,7 +59,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import AppLayout from '@/layouts/app-layout';
 import type { Auth, BreadcrumbItem, Role, User } from '@/types';
 
 interface PaginatedUsers {
@@ -289,7 +288,7 @@ export default function UserIndex({
         Boolean(search) || roleFilter !== 'all' || departmentFilter !== 'all';
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <>
             <Head title="Manajemen Pengguna" />
 
             <div className="flex flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8">
@@ -1011,6 +1010,10 @@ export default function UserIndex({
                     </form>
                 </DialogContent>
             </Dialog>
-        </AppLayout>
+        </>
     );
 }
+
+UserIndex.layout = {
+    breadcrumbs,
+};

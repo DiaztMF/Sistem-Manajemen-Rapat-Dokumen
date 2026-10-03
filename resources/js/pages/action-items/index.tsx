@@ -42,7 +42,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import AppLayout from '@/layouts/app-layout';
 import type { ActionItem, Auth, BreadcrumbItem, Meeting, User } from '@/types';
 
 interface PaginatedActionItems {
@@ -226,7 +225,7 @@ export default function ActionItemsIndex({
     };
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <>
             <Head title="Tindak Lanjut & Tugas (Action Items)" />
 
             <div className="flex h-full flex-1 flex-col gap-6 p-4 md:p-6 max-w-7xl mx-auto w-full">
@@ -763,6 +762,10 @@ export default function ActionItemsIndex({
                     </DialogContent>
                 </Dialog>
             </div>
-        </AppLayout>
+        </>
     );
 }
+
+ActionItemsIndex.layout = {
+    breadcrumbs,
+};
