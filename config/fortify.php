@@ -163,7 +163,8 @@ return [
     'features' => [
         // Features::registration(), // Dinonaktifkan: akun pegawai hanya didaftarkan oleh Administrator internal
         Features::resetPasswords(),
-        Features::emailVerification(),
+        Features::resetPasswords(),
+        // Features::emailVerification(), // Dinonaktifkan: user tidak perlu verifikasi email
         Features::twoFactorAuthentication([
             'confirm' => true,
             'confirmPassword' => true,

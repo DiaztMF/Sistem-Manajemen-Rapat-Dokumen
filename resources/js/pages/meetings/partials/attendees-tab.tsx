@@ -124,9 +124,11 @@ export default function AttendeesTab({
     const formatPresenceTime = (timeStr?: string | null) => {
         if (!timeStr) return '-';
         try {
-            return new Date(timeStr).toLocaleTimeString('id-ID', {
+            const normalized = timeStr.endsWith('Z') || timeStr.includes('+') ? timeStr : timeStr.replace(' ', 'T') + 'Z';
+            return new Date(normalized).toLocaleTimeString('id-ID', {
                 hour: '2-digit',
                 minute: '2-digit',
+                timeZone: 'Asia/Jakarta',
             }) + ' WIB';
         } catch {
             return timeStr;
