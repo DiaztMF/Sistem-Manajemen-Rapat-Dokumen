@@ -139,6 +139,15 @@ export default function MeetingShow({
 
     const formatDateIndo = (dateStr: string) => {
         try {
+            const [year, month, day] = dateStr.slice(0, 10).split('-').map(Number);
+            if (year && month && day) {
+                return new Date(year, month - 1, day).toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                });
+            }
             return new Date(dateStr).toLocaleDateString('id-ID', {
                 weekday: 'long',
                 day: 'numeric',

@@ -123,6 +123,14 @@ export default function DocumentsTab({
 
     const formatDateIndo = (dateStr: string) => {
         try {
+            const [year, month, day] = dateStr.slice(0, 10).split('-').map(Number);
+            if (year && month && day) {
+                return new Date(year, month - 1, day).toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                });
+            }
             return new Date(dateStr).toLocaleDateString('id-ID', {
                 day: 'numeric',
                 month: 'short',
