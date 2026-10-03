@@ -103,7 +103,28 @@ export default function MinutesIndex({ minutes, filters }: MinutesIndexProps) {
             preserveScroll: true,
         });
     };
-
+    const formatDateIndo = (dateStr?: string | null) => {
+        if (!dateStr) return '-';
+        try {
+            const [year, month, day] = dateStr.slice(0, 10).split('-').map(Number);
+            if (year && month && day) {
+                return new Date(year, month - 1, day).toLocaleDateString('id-ID', {
+                    weekday: 'short',
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                });
+            }
+            return new Date(dateStr).toLocaleDateString('id-ID', {
+                weekday: 'short',
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+            });
+        } catch {
+            return dateStr;
+        }
+    };
     const getStatusBadge = (minuteStatus: string) => {
         switch (minuteStatus) {
             case 'approved':
@@ -270,7 +291,7 @@ export default function MinutesIndex({ minutes, filters }: MinutesIndexProps) {
                                                 <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1.5">
                                                     <span className="flex items-center gap-1">
                                                         <Calendar className="size-3.5" />
-                                                        {item.meeting?.date}
+                                                        {formatDateIndo(item.meeting?.date)}
                                                     </span>
                                                     {item.meeting?.start_time && (
                                                         <span className="flex items-center gap-1">
@@ -305,7 +326,7 @@ export default function MinutesIndex({ minutes, filters }: MinutesIndexProps) {
                                                     {getStatusBadge(item.status)}
                                                     {item.reviewed_at && (
                                                         <span className="text-[11px] text-muted-foreground">
-                                                            Direview: {new Date(item.reviewed_at).toLocaleDateString('id-ID')}
+                                                            Direview: {formatDateIndo(item.reviewed_at)}
                                                         </span>
                                                     )}
                                                 </div>
@@ -377,7 +398,7 @@ export default function MinutesIndex({ minutes, filters }: MinutesIndexProps) {
                                         </div>
                                         <CardDescription className="flex items-center gap-2 text-xs mt-1">
                                             <Calendar className="size-3.5" />
-                                            {item.meeting?.date}
+                                            {formatDateIndo(item.meeting?.date)}
                                         </CardDescription>
                                     </CardHeader>
 

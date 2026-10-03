@@ -158,11 +158,35 @@ export default function ActionItemsIndex({
         });
     };
 
+    const formatDateIndo = (dateStr?: string | null) => {
+        if (!dateStr) return '-';
+        try {
+            const [year, month, day] = dateStr.slice(0, 10).split('-').map(Number);
+            if (year && month && day) {
+                return new Date(year, month - 1, day).toLocaleDateString('id-ID', {
+                    weekday: 'short',
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                });
+            }
+            return new Date(dateStr).toLocaleDateString('id-ID', {
+                weekday: 'short',
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+            });
+        } catch {
+            return dateStr;
+        }
+    };
+
     const isPastDue = (dueDate: string, status: string) => {
         if (status === 'completed') return false;
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const due = new Date(dueDate);
+        const [year, month, day] = dueDate.slice(0, 10).split('-').map(Number);
+        const due = year && month && day ? new Date(year, month - 1, day) : new Date(dueDate);
         return due < today;
     };
 
@@ -477,7 +501,7 @@ export default function ActionItemsIndex({
                                                                 }`}
                                                             >
                                                                 <Calendar className="size-3" />
-                                                                {item.due_date}
+                                                                {formatDateIndo(item.due_date)}
                                                             </div>
                                                         </div>
 
@@ -606,7 +630,7 @@ export default function ActionItemsIndex({
                                                     }`}
                                                 >
                                                     <Calendar className="size-3" />
-                                                    {item.due_date}
+                                                    {formatDateIndo(item.due_date)}
                                                 </div>
                                                 {overdue && (
                                                     <span className="block text-[10px] text-rose-600 font-bold mt-0.5">
@@ -698,7 +722,7 @@ export default function ActionItemsIndex({
                                     </div>
                                     <div className="text-xs text-muted-foreground flex items-center gap-1 pt-1">
                                         <Calendar className="size-3" />
-                                        Tenggat: {activeItem.due_date}
+                                        Tenggat: {formatDateIndo(activeItem.due_date)}
                                     </div>
                                 </div>
 
