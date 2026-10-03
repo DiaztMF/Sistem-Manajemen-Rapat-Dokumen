@@ -16,6 +16,7 @@ import {
     User as UserIcon,
     X,
 } from 'lucide-react';
+import { ConfirmDialog } from '@/components/confirm-dialog';
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -173,12 +174,14 @@ export default function DocumentsIndex({
     };
 
     const handleDelete = (doc: DocumentItem) => {
-        if (!confirm(`Apakah Anda yakin ingin menghapus berkas "${doc.title}"?`)) {
-            return;
-        }
+        setItemToDelete(doc);
+    };
 
-        router.delete(`/documents/${doc.id}`, {
+    const confirmDelete = () => {
+        if (!itemToDelete) return;
+        router.delete(`/documents/${itemToDelete.id}`, {
             preserveScroll: true,
+            onFinish: () => setItemToDelete(null),
         });
     };
 
@@ -671,6 +674,17 @@ export default function DocumentsIndex({
                         </form>
                     </DialogContent>
                 </Dialog>
+
+                <ConfirmDialog
+                    open={!!itemToDelete}
+                    onOpenChange={(open) => !open && setItemToDelete(null)}
+                    title="Hapus Berkas Dokumen"
+                    description={`Apakah Anda yakin ingin menghapus berkas "${itemToDelete?.title}"? Tindakan ini tidak dapat dibatalkan.`}
+                    confirmText="Hapus Berkas"
+                    cancelText="Batal"
+                    variant="destructive"
+                    onConfirm={confirmDelete}
+                />
             </div>
         </>
     );

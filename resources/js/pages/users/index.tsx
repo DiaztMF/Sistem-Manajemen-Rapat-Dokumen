@@ -22,6 +22,7 @@ import {
     X,
     XCircle,
 } from 'lucide-react';
+import { ConfirmDialog } from '@/components/confirm-dialog';
 import React, { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -245,18 +246,21 @@ export default function UserIndex({
     };
 
     // Handle Delete User
+    // Delete user confirmation state
+    const [userToDelete, setUserToDelete] = useState<User | null>(null);
+
+    // Handle Delete User
     const handleDeleteUser = (user: User) => {
         if (user.id === currentUserId) return;
+        setUserToDelete(user);
+    };
 
-        if (
-            confirm(
-                `Apakah Anda yakin ingin menghapus akun ${user.name} (${user.email})? Tindakan ini tidak dapat dibatalkan.`
-            )
-        ) {
-            router.delete(`/users/${user.id}`, {
-                preserveScroll: true,
-            });
-        }
+    const confirmDeleteUser = () => {
+        if (!userToDelete) return;
+        router.delete(`/users/${userToDelete.id}`, {
+            preserveScroll: true,
+            onFinish: () => setUserToDelete(null),
+        });
     };
 
     const getInitials = (name: string) => {
@@ -1010,6 +1014,17 @@ export default function UserIndex({
                     </form>
                 </DialogContent>
             </Dialog>
+
+            <ConfirmDialog
+                open={!!userToDelete}
+                onOpenChange={(open) => !open && setUserToDelete(null)}
+                title="Hapus Akun Pengguna"
+                description={`Apakah Anda yakin ingin menghapus akun ${userToDelete?.name} (${userToDelete?.email})? Tindakan ini tidak dapat dibatalkan.`}
+                confirmText="Hapus Pengguna"
+                cancelText="Batal"
+                variant="destructive"
+                onConfirm={confirmDeleteUser}
+            />
         </>
     );
 }
